@@ -11,9 +11,9 @@ namespace EntityLayer.Concrete
         public int LayerTypeID { get; set; }
         [StringLength(25)]
         public string LayerTypeName { get; set; }
-        public List<CollectionLayer> CollectionLayers { get; set; }
         public int CollectionID { get; set; }
         public Collection Collection { get; set; }
+        public List<CollectionLayer> CollectionLayers { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

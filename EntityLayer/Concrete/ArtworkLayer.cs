@@ -13,7 +13,6 @@ namespace EntityLayer.Concrete
         public Artwork Artwork { get; set; }
         public int CollectionLayerID { get; set; }
         public CollectionLayer CollectionLayer { get; set; }
-        public List<LayerTag> LayerTags { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }
