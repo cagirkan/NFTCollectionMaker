@@ -15,5 +15,7 @@ namespace EntityLayer.Concrete
         public string Email { get; set; }
         public string Password { get; set; }
         public DateTime CreatedAt { get; set; }
+        public List<Collection> Collections { get; set; }
+
     }
 }

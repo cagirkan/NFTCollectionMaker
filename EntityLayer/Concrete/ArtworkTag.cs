@@ -9,6 +9,10 @@ namespace EntityLayer.Concrete
     {
         [Key]
         public int MyProperty { get; set; }
+        public int ArtworkID { get; set; }
+        public Artwork Artwork { get; set; }
+        public int TagID { get; set; }
+        public Tag Tag { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

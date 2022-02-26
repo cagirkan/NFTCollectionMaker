@@ -13,6 +13,10 @@ namespace EntityLayer.Concrete
         public string ArtworkName { get; set; }
         [StringLength(512)]
         public string ImageURL { get; set; }
+        public int CollectionID { get; set; }
+        public Collection Collection { get; set; }
+        public List<ArtworkLayer> ArtworkLayers { get; set; }
+        public List<ArtworkTag> ArtworkTags { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

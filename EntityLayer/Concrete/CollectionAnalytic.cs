@@ -12,6 +12,8 @@ namespace EntityLayer.Concrete
         [StringLength(100)]
         public string Key { get; set; }
         public int Value { get; set; }
+        public int CollectionID { get; set; }
+        public Collection Collection { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }

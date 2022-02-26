@@ -15,6 +15,12 @@ namespace EntityLayer.Concrete
         public string ImageURL { get; set; }
         public int LayerIndex { get; set; }
         public int Popularity { get; set; }
+        public List<ArtworkLayer> ArtworkLayers { get; set; }
+        public int CollectionID { get; set; }
+        public Collection Collection { get; set; }
+        public int LayerTypeID { get; set; }
+        public LayerType LayerType { get; set; }
         public DateTime CreatedAt { get; set; }
+
     }
 }
