@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EntityLayer.Concrete
 {
-    class LayerType
+    public class LayerType
     {
         [Key]
         public int LayerTypeID { get; set; }

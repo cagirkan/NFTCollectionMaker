@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EntityLayer.Concrete
 {
-    class CollectionAnalytic
+    public class CollectionAnalytic
     {
         [Key]
         public int CollectionAnalyticID { get; set; }
