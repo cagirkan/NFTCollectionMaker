@@ -5,10 +5,10 @@ using System.Text;
 
 namespace EntityLayer.Concrete
 {
-    class LayerTag
+    class ArtworkTag
     {
         [Key]
-        public int LayerTagID { get; set; }
+        public int MyProperty { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }
