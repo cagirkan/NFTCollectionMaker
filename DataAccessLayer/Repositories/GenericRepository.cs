@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace DataAccessLayer.Repositories
 {
@@ -24,7 +26,7 @@ namespace DataAccessLayer.Repositories
 
         public List<T> GetListAll()
         {
-            return c.Set<T>().ToList();
+            return  c.Set<T>().ToList();
         }
 
         public List<T> List(Expression<Func<T, bool>> filter)

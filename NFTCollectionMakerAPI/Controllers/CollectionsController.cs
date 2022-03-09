@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
+using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -18,15 +19,21 @@ namespace NFTCollectionMakerAPI.Controllers
         [HttpGet]
         public IActionResult CollectionsList()
         {
-            var values = cm.GetList();
-            return Ok(values);
+            return Ok(cm.GetList());   
         }
 
         [HttpGet("{userID:int}")]
         public IActionResult CollectionsOfUser(int userID)
         {
-            var values = cm.GetCollectionsOfUser(userID);
-            return Ok(values);
+            return Ok(cm.GetCollectionsOfUser(userID));
+        }
+
+        [HttpPost]
+        public IActionResult CreateCollection(Collection collection)
+        {
+            collection.CreatedAt = DateTime.Now;
+            cm.Add(collection);
+            return StatusCode(StatusCodes.Status201Created, collection.CollectionID);
         }
     }
 }
