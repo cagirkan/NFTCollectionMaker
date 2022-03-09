@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace DataAccessLayer.Repositories
 {
@@ -24,6 +25,11 @@ namespace DataAccessLayer.Repositories
         public List<T> GetListAll()
         {
             return c.Set<T>().ToList();
+        }
+
+        public List<T> List(Expression<Func<T, bool>> filter)
+        {
+            return c.Set<T>().Where(filter).ToList();
         }
 
         public void Insert(T t)
