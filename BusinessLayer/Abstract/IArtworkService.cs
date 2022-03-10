@@ -5,8 +5,8 @@ using System.Text;
 
 namespace BusinessLayer.Abstract
 {
-    public interface ICollectionService : IGenericService<Collection>
+    public interface IArtworkService : IGenericService<Artwork>
     {
-        public List<Collection> GetCollectionsOfUser(int userID);
+        public List<Artwork> GetByCollectionID(int id);
     }
 }

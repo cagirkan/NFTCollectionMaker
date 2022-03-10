@@ -17,13 +17,13 @@ namespace NFTCollectionMakerAPI.Controllers
         CollectionManager cm = new CollectionManager(new EfCollectionRepository());
 
         [HttpGet]
-        public IActionResult CollectionsList()
+        public IActionResult GetCollections()
         {
             return Ok(cm.GetList());   
         }
 
         [HttpGet("{userID:int}")]
-        public IActionResult CollectionsOfUser(int userID)
+        public IActionResult GetCollectionsOfUser(int userID)
         {
             return Ok(cm.GetCollectionsOfUser(userID));
         }
@@ -35,5 +35,14 @@ namespace NFTCollectionMakerAPI.Controllers
             cm.Add(collection);
             return StatusCode(StatusCodes.Status201Created, collection.CollectionID);
         }
+
+        [HttpDelete("{id:int}")]
+        public IActionResult DeleteCollection(int id)
+        {
+            var collection = cm.GetByID(id);
+            cm.Delete(collection);
+            return Ok();
+        }
+
     }
 }
