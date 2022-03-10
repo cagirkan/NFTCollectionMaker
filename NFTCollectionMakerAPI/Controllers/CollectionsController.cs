@@ -57,8 +57,15 @@ namespace NFTCollectionMakerAPI.Controllers
         public IActionResult DeleteCollection(int id)
         {
             var collection = cm.GetByID(id);
-            cm.Delete(collection);
-            return Ok();
+            if (collection == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                cm.Delete(collection);
+                return Ok();
+            }
         }
 
     }

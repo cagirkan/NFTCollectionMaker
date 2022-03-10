@@ -10,7 +10,9 @@ namespace DataAccessLayer.Concrete
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("server=NGNCNB842;database=NFTCollectionMakerDB;integrated security=true;");
+            optionsBuilder
+                .UseLazyLoadingProxies()
+                .UseSqlServer("server=NGNCNB842;database=NFTCollectionMakerDB;integrated security=true;");
         }
         
         public DbSet<User> Users { get; set; }
