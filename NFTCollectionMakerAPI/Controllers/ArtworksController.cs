@@ -21,7 +21,13 @@ namespace NFTCollectionMakerAPI.Controllers
             return Ok(am.GetList());
         }
 
-        [HttpGet("{collectionID:int}")]
+        [HttpGet("{ID:int}")]
+        public IActionResult GetArtworks(int id)
+        {
+            return Ok(am.GetByID(id));
+        }
+
+        [HttpGet("CollectionID/{collectionID:int}")]
         public IActionResult GetArtworksOfCollection(int collectionID)
         {
             return Ok(am.GetByCollectionID(collectionID));

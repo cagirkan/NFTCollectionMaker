@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.Concrete;
+using BusinessLayer.ValidationRules;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -28,12 +30,27 @@ namespace NFTCollectionMakerAPI.Controllers
             return Ok(cm.GetCollectionsOfUser(userID));
         }
 
+        //User id kontrolü yapılacak mı?
         [HttpPost]
         public IActionResult CreateCollection(Collection collection)
         {
-            collection.CreatedAt = DateTime.Now;
-            cm.Add(collection);
-            return StatusCode(StatusCodes.Status201Created, collection.CollectionID);
+            CollectionValidator validationRules = new CollectionValidator();
+            ValidationResult result = validationRules.Validate(collection);
+
+            if (result.IsValid)
+            {
+                collection.CreatedAt = DateTime.Now;
+                cm.Add(collection);
+                return StatusCode(StatusCodes.Status201Created, collection.CollectionID);
+            }
+            else
+            {
+                foreach (var item in result.Errors)
+                {
+                    ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
+                }
+                return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+            }
         }
 
         [HttpDelete("{id:int}")]
