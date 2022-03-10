@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.Concrete;
+using BusinessLayer.ValidationRules;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -36,9 +38,23 @@ namespace NFTCollectionMakerAPI.Controllers
         [HttpPost]
         public IActionResult CreateArtwork(Artwork artwork)
         {
-            artwork.CreatedAt = DateTime.Now;
-            am.Add(artwork);
-            return StatusCode(StatusCodes.Status201Created, artwork);
+            ArtworkValidator validationRules = new ArtworkValidator();
+            ValidationResult result = validationRules.Validate(artwork);
+
+            if (result.IsValid)
+            {
+                artwork.CreatedAt = DateTime.Now;
+                am.Add(artwork);
+                return StatusCode(StatusCodes.Status201Created, artwork);
+            }
+            else
+            {
+                foreach (var item in result.Errors)
+                {
+                    ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
+                }
+                return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+            }
         }
 
         [HttpDelete("{id:int}")]
