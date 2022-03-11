@@ -1,10 +1,12 @@
 ﻿using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
+using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,20 +19,28 @@ namespace NFTCollectionMakerAPI.Controllers
     public class CollectionsController : ControllerBase
     {
         CollectionManager cm = new CollectionManager(new EfCollectionRepository());
-
+        Context c = new Context();
         [HttpGet]
         public IActionResult GetCollections()
         {
-            return Ok(cm.GetList());   
+            return Ok(cm.GetList());
         }
 
-        [HttpGet("{userID:int}")]
-        public IActionResult GetCollectionsOfUser(int userID)
+        [HttpGet("{collectionID:int}")]
+        public IActionResult GetCollectionWithArtwork(int collectionID)
         {
-            return Ok(cm.GetCollectionsOfUser(userID));
+            var collection = c.Collections.Include(x => x.Artworks).Where(x => x.CollectionID == collectionID).FirstOrDefault();
+            if(collection == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(collection);
+            }
         }
 
-        //User id kontrolü yapılacak mı?
+
         [HttpPost]
         public IActionResult CreateCollection(Collection collection)
         {
@@ -41,7 +51,28 @@ namespace NFTCollectionMakerAPI.Controllers
             {
                 collection.CreatedAt = DateTime.Now;
                 cm.Add(collection);
-                return StatusCode(StatusCodes.Status201Created, collection.CollectionID);
+                return StatusCode(StatusCodes.Status201Created, collection);
+            }
+            else
+            {
+                foreach (var item in result.Errors)
+                {
+                    ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
+                }
+                return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+            }
+        }
+
+        [HttpPut]
+        public IActionResult EditCollection(Collection collection)
+        {
+            CollectionValidator validationRules = new CollectionValidator();
+            ValidationResult result = validationRules.Validate(collection);
+
+            if (result.IsValid)
+            {
+                cm.Update(collection);
+                return Ok(collection);
             }
             else
             {
