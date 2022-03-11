@@ -8,7 +8,7 @@ namespace EntityLayer.Concrete
     public class ArtworkTag
     {
         [Key]
-        public int MyProperty { get; set; }
+        public int ArtworkTagID{ get; set; }
         public int ArtworkID { get; set; }
         public Artwork Artwork { get; set; }
         public int TagID { get; set; }
