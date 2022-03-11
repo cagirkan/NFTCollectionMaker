@@ -1,10 +1,12 @@
 ﻿using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
+using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +19,8 @@ namespace NFTCollectionMakerAPI.Controllers
     public class ArtworksController : ControllerBase
     {
         ArtworkManager am = new ArtworkManager(new EfArtworkRepository());
+        Context c = new Context();
+
         [HttpGet]
         public IActionResult GetArtworks()
         {
@@ -26,7 +30,15 @@ namespace NFTCollectionMakerAPI.Controllers
         [HttpGet("{ID:int}")]
         public IActionResult GetArtworks(int id)
         {
-            return Ok(am.GetByID(id));
+            var artwork = c.Artworks.Include(x => x.ArtworkLayers).Where(x => x.ArtworkID == id).FirstOrDefault();
+            if (artwork == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(artwork);
+            }
         }
 
         [HttpGet("CollectionID/{collectionID:int}")]
@@ -54,6 +66,27 @@ namespace NFTCollectionMakerAPI.Controllers
                     ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
                 }
                 return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+            }
+        }
+
+        [HttpPut]
+        public IActionResult EditArtwork(Artwork artwork)
+        {
+            ArtworkValidator validationRules = new ArtworkValidator();
+            ValidationResult result = validationRules.Validate(artwork);
+            if (result.IsValid)
+            {
+                am.Update(artwork);
+                return Ok(artwork);
+            }
+            else
+            {
+                foreach (var item in result.Errors)
+                {
+                    ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
+                }
+                return StatusCode(StatusCodes.Status400BadRequest, ModelState);
+
             }
         }
 

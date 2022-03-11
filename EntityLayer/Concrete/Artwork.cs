@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace EntityLayer.Concrete
 {
@@ -14,7 +13,7 @@ namespace EntityLayer.Concrete
         [StringLength(512)]
         public string ImageURL { get; set; }
         public int CollectionID { get; set; }
-        public Collection Collection { get; set; }
+        public Collection Collection  { get; set; }
         public List<ArtworkLayer> ArtworkLayers { get; set; }
         public List<ArtworkTag> ArtworkTags { get; set; }
         public DateTime CreatedAt { get; set; }

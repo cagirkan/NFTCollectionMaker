@@ -11,7 +11,6 @@ namespace DataAccessLayer.Concrete
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
-                .UseLazyLoadingProxies()
                 .UseSqlServer("server=NGNCNB842;database=NFTCollectionMakerDB;integrated security=true;");
         }
         

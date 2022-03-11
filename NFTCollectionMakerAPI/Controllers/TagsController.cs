@@ -1,12 +1,10 @@
 ﻿using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
-using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,42 +14,41 @@ namespace NFTCollectionMakerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CollectionsController : ControllerBase
+    public class TagsController : ControllerBase
     {
-        CollectionManager cm = new CollectionManager(new EfCollectionRepository());
-        Context c = new Context();
+        TagManager tm = new TagManager(new EfTagRepository());
         [HttpGet]
-        public IActionResult GetCollections()
+        public IActionResult GetTags()
         {
-            return Ok(cm.GetList());
+            var tags = tm.GetList();
+            return Ok(tags);
         }
 
-        [HttpGet("{collectionID:int}")]
-        public IActionResult GetCollectionWithArtwork(int collectionID)
+        [HttpGet("{id:int}")]
+        public IActionResult GetTags(int id)
         {
-            var collection = c.Collections.Include(x => x.Artworks).Where(x => x.CollectionID == collectionID).FirstOrDefault();
-            if(collection == null)
+            var tag = tm.GetByID(id);
+            if (tag == null)
             {
                 return NotFound();
             }
             else
             {
-                return Ok(collection);
+                return Ok(tag);
             }
         }
 
-
         [HttpPost]
-        public IActionResult CreateCollection(Collection collection)
+        public IActionResult CreateTag(Tag tag)
         {
-            CollectionValidator validationRules = new CollectionValidator();
-            ValidationResult result = validationRules.Validate(collection);
+            TagValidator validationRules = new TagValidator();
+            ValidationResult result = validationRules.Validate(tag);
 
             if (result.IsValid)
             {
-                collection.CreatedAt = DateTime.Now;
-                cm.Add(collection);
-                return StatusCode(StatusCodes.Status201Created, collection);
+                tag.CreatedAt = DateTime.Now;
+                tm.Add(tag);
+                return StatusCode(StatusCodes.Status201Created, tag.TagID);
             }
             else
             {
@@ -64,15 +61,15 @@ namespace NFTCollectionMakerAPI.Controllers
         }
 
         [HttpPut]
-        public IActionResult EditCollection(Collection collection)
+        public IActionResult EditTag(Tag tag)
         {
-            CollectionValidator validationRules = new CollectionValidator();
-            ValidationResult result = validationRules.Validate(collection);
+            TagValidator validationRules = new TagValidator();
+            ValidationResult result = validationRules.Validate(tag);
 
             if (result.IsValid)
             {
-                cm.Update(collection);
-                return Ok(collection);
+                tm.Update(tag);
+                return StatusCode(StatusCodes.Status201Created, tag);
             }
             else
             {
@@ -85,19 +82,18 @@ namespace NFTCollectionMakerAPI.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public IActionResult DeleteCollection(int id)
+        public IActionResult DeleteTag(int id)
         {
-            var collection = cm.GetByID(id);
-            if (collection == null)
+            var tag = tm.GetByID(id);
+            if (tag == null)
             {
                 return NotFound();
             }
             else
             {
-                cm.Delete(collection);
+                tm.Delete(tag);
                 return Ok();
             }
         }
-
     }
 }
