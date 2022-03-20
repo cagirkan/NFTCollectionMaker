@@ -6,6 +6,10 @@ using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.IO;
+using System.Linq;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace NFTCollectionMakerAPI.Controllers
 {
@@ -14,6 +18,8 @@ namespace NFTCollectionMakerAPI.Controllers
     public class CollectionLayersController : ControllerBase
     {
         CollectionLayerManager clm = new CollectionLayerManager(new EfCollectionLayerRepository());
+
+
         [HttpGet]
         public IActionResult GetCollectionLayers()
         {
