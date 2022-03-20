@@ -11,7 +11,7 @@ namespace EntityLayer.Concrete
         public int CollectionID { get; set; }
         [StringLength(50)]
         public string CollectionName { get; set; }
-        public int UserID { get; set; }
+        public int UserId { get; set; }
         public User User { get; set; }
         public List<Artwork> Artworks { get; set; }
         public List<CollectionAnalytic> CollectionAnalytics { get; set; }

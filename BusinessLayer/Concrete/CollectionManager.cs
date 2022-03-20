@@ -32,7 +32,7 @@ namespace BusinessLayer.Concrete
 
         public List<Collection> GetCollectionsOfUser(int userID)
         {
-            return _collectionDal.List(x => x.UserID == userID);
+            return _collectionDal.List(x => x.UserId == userID);
         }
 
         public List<Collection> GetList()
