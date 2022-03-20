@@ -13,14 +13,14 @@ namespace NFTCollectionMakerAPI.Controllers
     {
         LayerTypeManager ltm = new LayerTypeManager(new EfLayerTypeRepository());
         [HttpGet]
-        public IActionResult GetTags()
+        public IActionResult GetLayerTypes()
         {
             var layerTypes = ltm.GetList();
             return Ok(layerTypes);
         }
 
         [HttpGet("{id:int}")]
-        public IActionResult GetTags(int id)
+        public IActionResult GetLayerTypes(int id)
         {
             var layerType = ltm.GetByID(id);
             if (layerType == null)
@@ -34,7 +34,7 @@ namespace NFTCollectionMakerAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateTag(LayerType layerType)
+        public IActionResult CreateLayerType(LayerType layerType)
         {
             layerType.CreatedAt = DateTime.Now;
             ltm.Add(layerType);
@@ -42,14 +42,14 @@ namespace NFTCollectionMakerAPI.Controllers
         }
 
         [HttpPut]
-        public IActionResult EditTag(LayerType layerType)
+        public IActionResult EditLayerType(LayerType layerType)
         {
             ltm.Update(layerType);
             return StatusCode(StatusCodes.Status202Accepted, layerType);
         }
 
         [HttpDelete("{id:int}")]
-        public IActionResult DeleteTag(int id)
+        public IActionResult DeleteLayerType(int id)
         {
             var layerType = ltm.GetByID(id);
             if (layerType == null)

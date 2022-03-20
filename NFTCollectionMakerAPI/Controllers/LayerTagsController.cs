@@ -13,14 +13,14 @@ namespace NFTCollectionMakerAPI.Controllers
     {
         LayerTagManager ltm = new LayerTagManager(new EfLayerTagRepository());
         [HttpGet]
-        public IActionResult GetTags()
+        public IActionResult GetLayerTags()
         {
             var layerTags = ltm.GetList();
             return Ok(layerTags);
         }
 
         [HttpGet("{id:int}")]
-        public IActionResult GetTags(int id)
+        public IActionResult GetLayerTags(int id)
         {
             var layerTag = ltm.GetByID(id);
             if (layerTag == null)
@@ -34,7 +34,7 @@ namespace NFTCollectionMakerAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateTag(LayerTag layerTag)
+        public IActionResult CreateLayerTag(LayerTag layerTag)
         {
             layerTag.CreatedAt = DateTime.Now;
             ltm.Add(layerTag);
@@ -42,14 +42,14 @@ namespace NFTCollectionMakerAPI.Controllers
         }
 
         [HttpPut]
-        public IActionResult EditTag(LayerTag layerTag)
+        public IActionResult EditLayerTag(LayerTag layerTag)
         {
             ltm.Update(layerTag);
             return StatusCode(StatusCodes.Status202Accepted, layerTag);
         }
 
         [HttpDelete("{id:int}")]
-        public IActionResult DeleteTag(int id)
+        public IActionResult DeleteLayerTag(int id)
         {
             var layerTag = ltm.GetByID(id);
             if (layerTag == null)

@@ -13,14 +13,14 @@ namespace NFTCollectionMakerAPI.Controllers
     {
         ArtworkLayerManager alm = new ArtworkLayerManager(new EfArtworkLayerRepository());
         [HttpGet]
-        public IActionResult GetTags()
+        public IActionResult GetArtworkLayers()
         {
             var artworkLayers = alm.GetList();
             return Ok(artworkLayers);
         }
 
         [HttpGet("{id:int}")]
-        public IActionResult GetTags(int id)
+        public IActionResult GetArtworkLayers(int id)
         {
             var artworkLayer = alm.GetByID(id);
             if (artworkLayer == null)
@@ -34,7 +34,7 @@ namespace NFTCollectionMakerAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateTag(ArtworkLayer artworkLayer)
+        public IActionResult CreateArtworkLayer(ArtworkLayer artworkLayer)
         {
             artworkLayer.CreatedAt = DateTime.Now;
             alm.Add(artworkLayer);
@@ -42,14 +42,14 @@ namespace NFTCollectionMakerAPI.Controllers
         }
 
         [HttpPut]
-        public IActionResult EditTag(ArtworkLayer artworkLayer)
+        public IActionResult EditArtworkLayer(ArtworkLayer artworkLayer)
         {
             alm.Update(artworkLayer);
             return StatusCode(StatusCodes.Status202Accepted, artworkLayer);
         }
 
         [HttpDelete("{id:int}")]
-        public IActionResult DeleteTag(int id)
+        public IActionResult DeleteArtworkLayer(int id)
         {
             var artworkLayer = alm.GetByID(id);
             if (artworkLayer == null)
