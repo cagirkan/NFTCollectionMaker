@@ -9,56 +9,56 @@ namespace NFTCollectionMakerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LayerTagsController : ControllerBase
+    public class LayerTypesController : ControllerBase
     {
-        LayerTagManager ltm = new LayerTagManager(new EfLayerTagRepository());
+        LayerTypeManager ltm = new LayerTypeManager(new EfLayerTypeRepository());
         [HttpGet]
         public IActionResult GetTags()
         {
-            var layerTags = ltm.GetList();
-            return Ok(layerTags);
+            var layerTypes = ltm.GetList();
+            return Ok(layerTypes);
         }
 
         [HttpGet("{id:int}")]
         public IActionResult GetTags(int id)
         {
-            var layerTag = ltm.GetByID(id);
-            if (layerTag == null)
+            var layerType = ltm.GetByID(id);
+            if (layerType == null)
             {
                 return NotFound();
             }
             else
             {
-                return Ok(layerTag);
+                return Ok(layerType);
             }
         }
 
         [HttpPost]
-        public IActionResult CreateTag(LayerTag layerTag)
+        public IActionResult CreateTag(LayerType layerType)
         {
-            layerTag.CreatedAt = DateTime.Now;
-            ltm.Add(layerTag);
-            return StatusCode(StatusCodes.Status201Created, layerTag.LayerTagID);
+            layerType.CreatedAt = DateTime.Now;
+            ltm.Add(layerType);
+            return StatusCode(StatusCodes.Status201Created, layerType.LayerTypeID);
         }
 
         [HttpPut]
-        public IActionResult EditTag(LayerTag layerTag)
+        public IActionResult EditTag(LayerType layerType)
         {
-            ltm.Update(layerTag);
-            return StatusCode(StatusCodes.Status202Accepted, layerTag);
+            ltm.Update(layerType);
+            return StatusCode(StatusCodes.Status202Accepted, layerType);
         }
 
         [HttpDelete("{id:int}")]
         public IActionResult DeleteTag(int id)
         {
-            var layerTag = ltm.GetByID(id);
-            if (layerTag == null)
+            var layerType = ltm.GetByID(id);
+            if (layerType == null)
             {
                 return NotFound();
             }
             else
             {
-                ltm.Delete(layerTag);
+                ltm.Delete(layerType);
                 return Ok();
             }
         }

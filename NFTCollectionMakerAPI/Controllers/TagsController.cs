@@ -69,7 +69,7 @@ namespace NFTCollectionMakerAPI.Controllers
             if (result.IsValid)
             {
                 tm.Update(tag);
-                return StatusCode(StatusCodes.Status201Created, tag);
+                return StatusCode(StatusCodes.Status202Accepted, tag);
             }
             else
             {
