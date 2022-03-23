@@ -61,6 +61,7 @@ namespace NFTCollectionMakerAPI
             });
             services.AddSingleton<IAuthService>(new AuthManager(key));
 
+            //image upload settings
             services.Configure<FormOptions>(o => {
                 o.ValueLengthLimit = int.MaxValue;
                 o.MultipartBodyLengthLimit = int.MaxValue;

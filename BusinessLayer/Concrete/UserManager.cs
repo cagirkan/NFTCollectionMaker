@@ -39,9 +39,20 @@ namespace BusinessLayer.Concrete
             return _user.GetListAll();
         }
 
-        public bool isUnique(string name, string email)
+        public bool isEmailUnique(string email)
         {
-            throw new NotImplementedException();
+            User user = _user.Get(x => x.Email.Equals(email));
+            if (user == null)
+                return true;
+            return false;
+        }
+
+        public bool isUsernameUnique(string name)
+        {
+            User user = _user.Get(x => x.UserName.Equals(name));
+            if (user == null)
+                return true;
+            return false;
         }
 
         public void Update(User t)

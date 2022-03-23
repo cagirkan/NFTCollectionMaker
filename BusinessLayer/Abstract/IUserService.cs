@@ -7,6 +7,7 @@ namespace BusinessLayer.Abstract
 {
     public interface IUserService : IGenericService<User>
     {
-        public bool isUnique(string name, string email);
+        public bool isUsernameUnique(string name);
+        public bool isEmailUnique(string email);
     }
 }
