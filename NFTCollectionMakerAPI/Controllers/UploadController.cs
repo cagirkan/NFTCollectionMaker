@@ -23,14 +23,16 @@ namespace NFTCollectionMakerAPI.Controllers
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
                 if (file.Length > 0)
                 {
-                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"'); //will change with timestamp
                     var fullPath = Path.Combine(pathToSave, fileName);
-                    var dbPath = Path.Combine(folderName, fileName);
+                    var dbPath = Path.Combine("img", fileName);
+                    var imagePath = Path.Combine("https://localhost:44386", dbPath); //will change with server path
+                    imagePath = imagePath.Replace("\\", "/");
                     using (var stream = new FileStream(fullPath, FileMode.Create))
                     {
                         file.CopyTo(stream);
                     }
-                    return Ok(new { dbPath });
+                    return Ok(new { imagePath });
                 }
                 else
                 {

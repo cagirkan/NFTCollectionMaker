@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -15,6 +16,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -62,7 +64,8 @@ namespace NFTCollectionMakerAPI
             services.AddSingleton<IAuthService>(new AuthManager(key));
 
             //image upload settings
-            services.Configure<FormOptions>(o => {
+            services.Configure<FormOptions>(o =>
+            {
                 o.ValueLengthLimit = int.MaxValue;
                 o.MultipartBodyLengthLimit = int.MaxValue;
                 o.MemoryBufferThreshold = int.MaxValue;
@@ -80,6 +83,13 @@ namespace NFTCollectionMakerAPI
             }
 
             app.UseHttpsRedirection();
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "Resources/Images")),
+                    RequestPath = "/img"
+            });
 
             app.UseRouting();
 
