@@ -17,5 +17,7 @@ namespace EntityLayer.Concrete
         public List<ArtworkLayer> ArtworkLayers { get; set; }
         public List<ArtworkTag> ArtworkTags { get; set; }
         public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+
     }
 }

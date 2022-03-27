@@ -18,5 +18,6 @@ namespace EntityLayer.Concrete
         public List<CollectionLayer> CollectionLayers { get; set; }
         public List<LayerType> LayerTypes { get; set; }
         public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 }

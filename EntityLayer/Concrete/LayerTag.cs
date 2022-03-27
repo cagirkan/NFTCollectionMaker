@@ -14,5 +14,7 @@ namespace EntityLayer.Concrete
         public int TagID { get; set; }
         public Tag Tag { get; set; }
         public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+
     }
 }

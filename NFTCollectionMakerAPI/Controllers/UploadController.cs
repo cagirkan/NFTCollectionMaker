@@ -25,8 +25,8 @@ namespace NFTCollectionMakerAPI.Controllers
                 {
                     var fileName = DateTime.Now.ToString("MMddhhmmss") + ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
                     var fullPath = Path.Combine(pathToSave, fileName);
-                    var dbPath = Path.Combine("img", fileName);
-                    var imagePath = Path.Combine("https://localhost:44386", dbPath); //link will change with base url
+                    var publicPath = Path.Combine("img", fileName);
+                    var imagePath = Path.Combine("https://localhost:44386", publicPath); //link will change with base url
                     imagePath = imagePath.Replace("\\", "/");
                     using (var stream = new FileStream(fullPath, FileMode.Create))
                     {
