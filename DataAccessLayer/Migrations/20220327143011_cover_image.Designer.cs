@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20220320140234_JSONWebTokenM1_remove2")]
-    partial class JSONWebTokenM1_remove2
+    [Migration("20220327143011_cover_image")]
+    partial class cover_image
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -42,6 +42,9 @@ namespace DataAccessLayer.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("ArtworkID");
 
                     b.HasIndex("CollectionID");
@@ -63,6 +66,9 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("ArtworkLayerID");
@@ -90,6 +96,9 @@ namespace DataAccessLayer.Migrations
                     b.Property<int>("TagID")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("ArtworkTagID");
 
                     b.HasIndex("ArtworkID");
@@ -110,7 +119,13 @@ namespace DataAccessLayer.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("CoverImage")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("UserId")
@@ -140,7 +155,7 @@ namespace DataAccessLayer.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Value")
@@ -183,6 +198,9 @@ namespace DataAccessLayer.Migrations
                     b.Property<int>("Popularity")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("CollectionLayerID");
 
                     b.HasIndex("CollectionID");
@@ -207,6 +225,9 @@ namespace DataAccessLayer.Migrations
 
                     b.Property<int>("TagID")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("LayerTagID");
 
@@ -234,6 +255,9 @@ namespace DataAccessLayer.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("LayerTypeID");
 
                     b.HasIndex("CollectionID");
@@ -255,6 +279,9 @@ namespace DataAccessLayer.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("TagID");
 
                     b.ToTable("Tags");
@@ -273,6 +300,9 @@ namespace DataAccessLayer.Migrations
                     b.Property<string>("Email")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
@@ -308,7 +338,7 @@ namespace DataAccessLayer.Migrations
                     b.HasOne("EntityLayer.Concrete.CollectionLayer", "CollectionLayer")
                         .WithMany("ArtworkLayers")
                         .HasForeignKey("CollectionLayerID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Artwork");
@@ -368,7 +398,7 @@ namespace DataAccessLayer.Migrations
                     b.HasOne("EntityLayer.Concrete.LayerType", "LayerType")
                         .WithMany("CollectionLayers")
                         .HasForeignKey("LayerTypeID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Collection");

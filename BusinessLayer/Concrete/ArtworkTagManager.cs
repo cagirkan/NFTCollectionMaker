@@ -37,6 +37,7 @@ namespace BusinessLayer.Concrete
         public void Update(ArtworkTag t)
         {
             _artworkTagDal.Update(t);
+
         }
     }
 }

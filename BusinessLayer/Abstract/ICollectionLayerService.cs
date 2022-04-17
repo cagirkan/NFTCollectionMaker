@@ -7,5 +7,6 @@ namespace BusinessLayer.Abstract
 {
     public interface ICollectionLayerService : IGenericService<CollectionLayer>
     {
+        public int AddWithReturn(CollectionLayer t);
     }
 }

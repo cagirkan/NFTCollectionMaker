@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -52,7 +53,6 @@ namespace NFTCollectionMakerAPI.Controllers
         {
             ArtworkValidator validationRules = new ArtworkValidator();
             ValidationResult result = validationRules.Validate(artwork);
-
             if (result.IsValid)
             {
                 artwork.CreatedAt = DateTime.Now;
@@ -74,20 +74,10 @@ namespace NFTCollectionMakerAPI.Controllers
         {
             ArtworkValidator validationRules = new ArtworkValidator();
             ValidationResult result = validationRules.Validate(artwork);
-            if (result.IsValid)
-            {
+            var requestedArtwork = am.GetByID(artwork.ArtworkID);
+            
                 am.Update(artwork);
                 return Ok(artwork);
-            }
-            else
-            {
-                foreach (var item in result.Errors)
-                {
-                    ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
-                }
-                return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-
-            }
         }
 
         [HttpDelete("{id:int}")]

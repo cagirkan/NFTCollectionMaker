@@ -117,6 +117,9 @@ namespace DataAccessLayer.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("CoverImage")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -333,7 +336,7 @@ namespace DataAccessLayer.Migrations
                     b.HasOne("EntityLayer.Concrete.CollectionLayer", "CollectionLayer")
                         .WithMany("ArtworkLayers")
                         .HasForeignKey("CollectionLayerID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Artwork");
@@ -393,7 +396,7 @@ namespace DataAccessLayer.Migrations
                     b.HasOne("EntityLayer.Concrete.LayerType", "LayerType")
                         .WithMany("CollectionLayers")
                         .HasForeignKey("LayerTypeID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Collection");

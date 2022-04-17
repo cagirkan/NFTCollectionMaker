@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataAccessLayer.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,7 +14,8 @@ namespace DataAccessLayer.Migrations
                     TagID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TagName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -30,6 +31,7 @@ namespace DataAccessLayer.Migrations
                     UserName = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -44,15 +46,16 @@ namespace DataAccessLayer.Migrations
                     CollectionID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CollectionName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    UserID = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Collections", x => x.CollectionID);
                     table.ForeignKey(
-                        name: "FK_Collections_Users_UserID",
-                        column: x => x.UserID,
+                        name: "FK_Collections_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserID",
                         onDelete: ReferentialAction.Cascade);
@@ -67,7 +70,8 @@ namespace DataAccessLayer.Migrations
                     ArtworkName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     ImageURL = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
                     CollectionID = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -90,7 +94,7 @@ namespace DataAccessLayer.Migrations
                     Value = table.Column<int>(type: "int", nullable: false),
                     CollectionID = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -111,7 +115,8 @@ namespace DataAccessLayer.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     LayerTypeName = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
                     CollectionID = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -128,15 +133,16 @@ namespace DataAccessLayer.Migrations
                 name: "ArtworkTags",
                 columns: table => new
                 {
-                    MyProperty = table.Column<int>(type: "int", nullable: false)
+                    ArtworkTagID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ArtworkID = table.Column<int>(type: "int", nullable: false),
                     TagID = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ArtworkTags", x => x.MyProperty);
+                    table.PrimaryKey("PK_ArtworkTags", x => x.ArtworkTagID);
                     table.ForeignKey(
                         name: "FK_ArtworkTags_Artworks_ArtworkID",
                         column: x => x.ArtworkID,
@@ -163,7 +169,8 @@ namespace DataAccessLayer.Migrations
                     Popularity = table.Column<int>(type: "int", nullable: false),
                     CollectionID = table.Column<int>(type: "int", nullable: false),
                     LayerTypeID = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -173,13 +180,12 @@ namespace DataAccessLayer.Migrations
                         column: x => x.CollectionID,
                         principalTable: "Collections",
                         principalColumn: "CollectionID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CollectionLayers_LayerTypes_LayerTypeID",
                         column: x => x.LayerTypeID,
                         principalTable: "LayerTypes",
-                        principalColumn: "LayerTypeID",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "LayerTypeID");
                 });
 
             migrationBuilder.CreateTable(
@@ -190,7 +196,8 @@ namespace DataAccessLayer.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ArtworkID = table.Column<int>(type: "int", nullable: false),
                     CollectionLayerID = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -205,8 +212,7 @@ namespace DataAccessLayer.Migrations
                         name: "FK_ArtworkLayers_CollectionLayers_CollectionLayerID",
                         column: x => x.CollectionLayerID,
                         principalTable: "CollectionLayers",
-                        principalColumn: "CollectionLayerID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "CollectionLayerID");
                 });
 
             migrationBuilder.CreateTable(
@@ -217,7 +223,8 @@ namespace DataAccessLayer.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CollectionLayerID = table.Column<int>(type: "int", nullable: false),
                     TagID = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -277,9 +284,9 @@ namespace DataAccessLayer.Migrations
                 column: "LayerTypeID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Collections_UserID",
+                name: "IX_Collections_UserId",
                 table: "Collections",
-                column: "UserID");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LayerTags_CollectionLayerID",

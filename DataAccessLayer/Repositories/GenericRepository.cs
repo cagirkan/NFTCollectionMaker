@@ -40,15 +40,14 @@ namespace DataAccessLayer.Repositories
             c.SaveChanges();
         }
 
-        public void Update(T t)
-        {
-            c.Update(t);
-            c.SaveChanges();
-        }
-
         public T Get(Expression<Func<T, bool>> filter)
         {
             return c.Set<T>().SingleOrDefault(filter);
+        }
+
+        public void Update(T t)
+        {
+            c.SaveChanges();
         }
     }
 }

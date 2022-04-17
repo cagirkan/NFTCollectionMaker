@@ -25,7 +25,20 @@ namespace NFTCollectionMakerAPI.Controllers
         [HttpGet]
         public IActionResult GetCollections()
         {
-            return Ok(cm.GetList());
+            var collectionsList = c.Collections.Include(x => x.Artworks);
+            foreach (Collection item in collectionsList)
+            {
+                foreach (var artwork in item.Artworks)
+                {
+                    if (artwork.ImageURL != null)
+                    {
+                        item.CoverImage = artwork.ImageURL;
+                        break;
+                    }
+                }
+            }
+
+            return Ok(collectionsList);
         }
 
         [HttpGet("{collectionID:int}")]

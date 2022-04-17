@@ -13,6 +13,7 @@ namespace EntityLayer.Concrete
         public string CollectionName { get; set; }
         public int UserId { get; set; }
         public User User { get; set; }
+        public string CoverImage { get; set; }
         public List<Artwork> Artworks { get; set; }
         public List<CollectionAnalytic> CollectionAnalytics { get; set; }
         public List<CollectionLayer> CollectionLayers { get; set; }

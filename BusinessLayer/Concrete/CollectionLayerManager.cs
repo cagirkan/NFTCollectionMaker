@@ -3,6 +3,7 @@ using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace BusinessLayer.Concrete
@@ -16,6 +17,14 @@ namespace BusinessLayer.Concrete
             _collectionLayer = collectionLayer;
         }
 
+        public int AddWithReturn(CollectionLayer t)
+        {
+            _collectionLayer.Insert(t);
+            //Get Last index
+            return int.Parse(GetList().OrderByDescending(p => p.CollectionLayerID)
+                        .Select(r => r.CollectionLayerID)
+                        .First().ToString());
+        }
         public void Add(CollectionLayer t)
         {
             _collectionLayer.Insert(t);

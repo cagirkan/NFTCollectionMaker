@@ -62,6 +62,7 @@ namespace NFTCollectionMakerAPI
                 };
             });
             services.AddSingleton<IAuthService>(new AuthManager(key));
+            services.AddScoped<IPopulateService, PopulateManager>();
 
             //image upload settings
             services.Configure<FormOptions>(o =>
