@@ -7,6 +7,6 @@ namespace BusinessLayer.Abstract
 {
     public interface ICollectionService : IGenericService<Collection>
     {
-        public List<Collection> GetCollectionsOfUser(int userID);
+        public Collection GetCollectionsOfUser(string userName);
     }
 }

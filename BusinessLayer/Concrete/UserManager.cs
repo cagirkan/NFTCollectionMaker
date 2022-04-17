@@ -34,6 +34,11 @@ namespace BusinessLayer.Concrete
             return _user.GetByID(id);
         }
 
+        public int getIdByUsername(string username)
+        {
+            return _user.Get(x => x.UserName == username).UserID;
+        }
+
         public List<User> GetList()
         {
             return _user.GetListAll();

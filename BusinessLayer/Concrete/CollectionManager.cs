@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ namespace BusinessLayer.Concrete
     public class CollectionManager : ICollectionService
     {
         ICollectionDal _collectionDal;
+        UserManager um = new UserManager(new EfUserRepository());
+
 
         public CollectionManager(ICollectionDal collectionDal)
         {
@@ -30,9 +33,10 @@ namespace BusinessLayer.Concrete
             return _collectionDal.GetByID(id);
         }
 
-        public List<Collection> GetCollectionsOfUser(int userID)
+        public Collection GetCollectionsOfUser(string userName)
         {
-            return _collectionDal.List(x => x.UserId == userID);
+            int userID = um.getIdByUsername(userName);
+            return _collectionDal.Get(x => x.UserId == userID);
         }
 
         public List<Collection> GetList()

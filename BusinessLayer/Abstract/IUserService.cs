@@ -9,5 +9,6 @@ namespace BusinessLayer.Abstract
     {
         public bool isUsernameUnique(string name);
         public bool isEmailUnique(string email);
+        public int getIdByUsername(string username);
     }
 }

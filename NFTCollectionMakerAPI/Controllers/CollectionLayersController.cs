@@ -66,6 +66,8 @@ namespace NFTCollectionMakerAPI.Controllers
                 string tag = await _populateManager.GetTag(collectionLayer.ImageURL);
                 Tag dbTag = new Tag();
                 dbTag.TagName = tag;
+                dbTag.CreatedAt = DateTime.Now;
+                dbTag.UpdatedAt = DateTime.Now;
                 int tagID = tm.AddWithReturn(dbTag);
                 //Create LayerTag
                 LayerTag layerTag = new LayerTag();
@@ -74,7 +76,7 @@ namespace NFTCollectionMakerAPI.Controllers
                 layerTag.CollectionLayerID = collectionLayerID;
                 layerTag.TagID = tagID;
                 ltm.Add(layerTag);
-                return StatusCode(StatusCodes.Status201Created, collectionLayer);
+                return StatusCode(StatusCodes.Status201Created, tag);
             }
             else
             {

@@ -4,6 +4,7 @@ using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,7 @@ namespace NFTCollectionMakerAPI.Controllers
         CollectionManager cm = new CollectionManager(new EfCollectionRepository());
         Context c = new Context();
         [HttpGet]
-        public IActionResult GetCollections()
+        public IActionResult GetCollections([FromHeader] object obj)
         {
             var collectionsList = c.Collections.Include(x => x.Artworks);
             foreach (Collection item in collectionsList)
@@ -37,7 +38,6 @@ namespace NFTCollectionMakerAPI.Controllers
                     }
                 }
             }
-
             return Ok(collectionsList);
         }
 
