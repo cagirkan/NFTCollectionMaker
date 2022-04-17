@@ -1,9 +1,12 @@
 ﻿using BusinessLayer.Abstract;
+using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,20 +16,31 @@ namespace BusinessLayer.Concrete
     public class PopulateManager : IPopulateService
     {
         private readonly IConfiguration _config;
+        CollectionLayerManager clm = new CollectionLayerManager(new EfCollectionLayerRepository());
 
         public PopulateManager(IConfiguration config)
         {
             _config = config;
         }
 
-        public Collection PopulateCollection(List<ArtworkLayer> layers)
+        public void PopulateCollection(int collectionID)
         {
-            foreach (var item in layers)
+            List<CollectionLayer> collectionLayers = clm.GetLayersOfCollection(collectionID);
+            List<Bitmap> layerImages = new List<Bitmap>();
+            string[] imgPaths = GetImagePath(collectionID);
+            foreach (var item in imgPaths)
             {
+                Bitmap bitmap = new Bitmap(item);
+                layerImages.Add(bitmap);
             }
-            Collection collection = new Collection();
-            collection.Artworks.Add(new Artwork());
-            return collection;
+        }
+
+        private string[] GetImagePath(int collectionID)
+        {
+            var folderName = Path.Combine("Resources", "Images", collectionID.ToString());
+            var fullPath = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+            string[] filePaths = Directory.GetFiles(fullPath);
+            return filePaths;
         }
 
         //Handle Errors

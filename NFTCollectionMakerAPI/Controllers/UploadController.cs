@@ -37,16 +37,18 @@ namespace NFTCollectionMakerAPI.Controllers
             };
             var claims = handler.ValidateToken(token, validations, out var tokenSecure);
             string userName = claims.Identity.Name;
-            string collectionID =userName + "_" + "col" + cm.GetCollectionsOfUser(userName).CollectionID.ToString();
+            string collectionID = cm.GetCollectionsOfUser(userName).CollectionID.ToString();
+            string prefix = userName + "_" + "col" + collectionID;
             try
             {
                 var formCollection = await Request.ReadFormAsync();
                 var file = formCollection.Files.First();
-                var folderName = Path.Combine("Resources", "Images");
+                var folderName = Path.Combine("Resources", "Images", collectionID);
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                Directory.CreateDirectory(pathToSave);
                 if (file.Length > 0)
                 {
-                    var fileName = collectionID + "_" + DateTime.Now.ToString("MMddhhmmss") + "_" + ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    var fileName = prefix + "_" + DateTime.Now.ToString("MMddhhmmss") + "_" + ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
                     var fullPath = Path.Combine(pathToSave, fileName);
                     var publicPath = Path.Combine("img", fileName);
                     var imagePath = Path.Combine("https://localhost:44386", publicPath); //link will change with base url

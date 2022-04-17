@@ -8,7 +8,7 @@ namespace BusinessLayer.Abstract
 {
     public interface IPopulateService
     {
-        public Collection PopulateCollection(List<ArtworkLayer> layers);
+        public void PopulateCollection(int collectionID);
         public Task<string> GetTag(string image);
     }
 }

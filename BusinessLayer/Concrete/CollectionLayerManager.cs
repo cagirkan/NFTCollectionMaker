@@ -49,5 +49,10 @@ namespace BusinessLayer.Concrete
         {
             _collectionLayer.Update(t);
         }
+
+        public List<CollectionLayer> GetLayersOfCollection(int collectionID)
+        {
+            return _collectionLayer.List(x => x.CollectionID == collectionID);
+        }
     }
 }
