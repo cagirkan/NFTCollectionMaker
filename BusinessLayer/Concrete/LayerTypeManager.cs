@@ -26,6 +26,11 @@ namespace BusinessLayer.Concrete
             _layerType.Delete(t);
         }
 
+        public List<LayerType> GetByCollectionID(int id)
+        {
+            return _layerType.List(x => x.CollectionID == id);
+        }
+
         public LayerType GetByID(int id)
         {
             return _layerType.GetByID(id);

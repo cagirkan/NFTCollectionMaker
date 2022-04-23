@@ -37,13 +37,14 @@ namespace NFTCollectionMakerAPI.Controllers
             };
             var claims = handler.ValidateToken(token, validations, out var tokenSecure);
             string userName = claims.Identity.Name;
+            //Collection olmayan kullanıcılar layer yükleyebilecek mi?
             string collectionID = cm.GetCollectionsOfUser(userName).CollectionID.ToString();
             string prefix = userName + "_" + "col" + collectionID;
             try
             {
                 var formCollection = await Request.ReadFormAsync();
                 var file = formCollection.Files.First();
-                var folderName = Path.Combine("Resources", "Images", collectionID);
+                var folderName = Path.Combine("Resources", "Images", "CollectionLayers", "col" + collectionID);
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
                 Directory.CreateDirectory(pathToSave);
                 if (file.Length > 0)

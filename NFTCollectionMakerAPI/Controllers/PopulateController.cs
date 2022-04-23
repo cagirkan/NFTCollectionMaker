@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace NFTCollectionMakerAPI.Controllers
 {
@@ -16,10 +17,10 @@ namespace NFTCollectionMakerAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Populate(int collectionID)
+        public async Task<IActionResult> Populate(int collectionID)
         {
-            _populateManager.PopulateCollection(collectionID);
-            return null;
+            var response = await _populateManager.PopulateCollection(collectionID);
+            return Ok(response);
         }
     }
 }

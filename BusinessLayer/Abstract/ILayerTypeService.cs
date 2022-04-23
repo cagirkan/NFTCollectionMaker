@@ -7,5 +7,6 @@ namespace BusinessLayer.Abstract
 {
     public interface ILayerTypeService : IGenericService<LayerType>
     {
+        public List<LayerType> GetByCollectionID(int id);
     }
 }

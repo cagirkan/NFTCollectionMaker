@@ -36,6 +36,18 @@ namespace BusinessLayer.Concrete
             return _artworkDal.GetByID(id);
         }
 
+        public int GetLastID(int collectionID)
+        {
+            int id = 0;
+            List<Artwork> artworks = GetByCollectionID(collectionID);
+            foreach (Artwork artwork in artworks)
+            {
+                if (artwork.ArtworkID > id)
+                    id = artwork.ArtworkID;
+            }
+            return id;
+        }
+
         public List<Artwork> GetList()
         {
             return _artworkDal.GetListAll();
