@@ -13,6 +13,7 @@ namespace EntityLayer.Concrete
         public string CollectionLayerName { get; set; }
         [StringLength(512)]
         public string ImageURL { get; set; }
+        public string ImagePath { get; set; }
         public int LayerIndex { get; set; }
         public int Popularity { get; set; }
         public List<ArtworkLayer> ArtworkLayers { get; set; }

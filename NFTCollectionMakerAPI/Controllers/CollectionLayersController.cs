@@ -19,8 +19,10 @@ namespace NFTCollectionMakerAPI.Controllers
     public class CollectionLayersController : ControllerBase
     {
         CollectionLayerManager clm = new CollectionLayerManager(new EfCollectionLayerRepository());
+        CollectionManager cm = new CollectionManager(new EfCollectionRepository());
         TagManager tm = new TagManager(new EfTagRepository());
         LayerTagManager ltm = new LayerTagManager(new EfLayerTagRepository());
+        LayerTypeManager ltym = new LayerTypeManager(new EfLayerTypeRepository());
         private readonly IPopulateService _populateManager;
 
         public CollectionLayersController(IPopulateService populateManager)
@@ -61,6 +63,18 @@ namespace NFTCollectionMakerAPI.Controllers
                 collectionLayer.UpdatedAt = DateTime.Now;
                 collectionLayer.Popularity = 0;
                 collectionLayer.LayerIndex = 100;
+                LayerType layerType = ltym.GetByID(collectionLayer.LayerTypeID);
+                Collection collection = cm.GetByID(collectionLayer.CollectionID);
+                string filename = collectionLayer.ImageURL.Substring(collectionLayer.ImageURL.LastIndexOf("/")+1);
+                string dir = Directory.GetCurrentDirectory();
+                string path = Path.Combine(dir,
+                                           "Resources",
+                                           "Images",
+                                           "CollectionLayers",
+                                           "col" + collection.CollectionID.ToString(),
+                                           layerType.LayerTypeName,
+                                           filename);
+                collectionLayer.ImagePath = path;
                 int collectionLayerID = clm.AddWithReturn(collectionLayer);
                 //Create Tag
                 string tag = await _populateManager.GetTag(collectionLayer.ImageURL);
