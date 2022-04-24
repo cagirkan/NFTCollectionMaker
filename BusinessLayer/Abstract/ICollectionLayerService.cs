@@ -9,5 +9,6 @@ namespace BusinessLayer.Abstract
     {
         public int AddWithReturn(CollectionLayer t);
         public List<CollectionLayer> GetLayersOfCollection(int collectionID);
+        public List<List<string>> GetLayerPaths(List<CollectionLayer> collectionLayers);
     }
 }

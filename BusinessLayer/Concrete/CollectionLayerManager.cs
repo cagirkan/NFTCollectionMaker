@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
@@ -53,6 +54,25 @@ namespace BusinessLayer.Concrete
         public List<CollectionLayer> GetLayersOfCollection(int collectionID)
         {
             return _collectionLayer.List(x => x.CollectionID == collectionID);
+        }
+
+        public List<List<string>> GetLayerPaths(List<CollectionLayer> collectionLayers)
+        {
+            List<CollectionLayer> orderedCollectionLayers = collectionLayers.OrderBy(x => x.LayerIndex).ToList();
+            var typeList = new List<int>();
+            List<List<string>> layerPaths = new List<List<string>>();
+
+            foreach (var layer in orderedCollectionLayers)
+            {
+                if(typeList.Contains(layer.LayerTypeID))
+                    layerPaths[typeList.IndexOf(layer.LayerTypeID)].Add(layer.ImagePath);
+                else
+                {
+                    layerPaths.Add(new List<string> { layer.ImagePath });
+                    typeList.Add(layer.LayerTypeID);
+                }
+            }
+            return layerPaths;
         }
     }
 }

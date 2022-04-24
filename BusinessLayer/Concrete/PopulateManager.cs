@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,59 +37,93 @@ namespace BusinessLayer.Concrete
             string mergedImagePath = "";
             StringBuilder sb = new StringBuilder();
 
-            List<Bitmap> layerImages = new List<Bitmap>();
-            string[] imgPaths = GetImagePath(collectionID);
-            foreach (var item in imgPaths)
-            {
-                Bitmap bitmap = new Bitmap(item);
-                layerImages.Add(bitmap);
-            }
+            List<List<string>> imagePaths = clm.GetLayerPaths(collectionLayers);
+            List<List<Bitmap>> layers = CreateBitmap(imagePaths);
+            Bitmap bitmap = new Bitmap(layers[0][0]);
+            MergeLayers(bitmap, layers[0], 0, layers, collection);
 
-            foreach (var item in collectionLayers)
-            {
-                //select collectionlayers ?
-                mergedImagePath = MergeLayers(layerImages[0], layerImages[1], collection);
-                Artwork artwork = new Artwork();
-                artwork.ArtworkName = mergedImagePath.Substring(mergedImagePath.LastIndexOf("/"), mergedImagePath.Length - 3);
-                artwork.ImageURL = mergedImagePath;
-                artwork.CollectionID = collectionID;
-                artwork.CreatedAt = DateTime.Now;
-                artwork.UpdatedAt = DateTime.Now;
-                am.Add(artwork);
-                item.Popularity++;
-            }
+            //foreach (var item in collectionLayers)
+            //{
+            //    //select collectionlayers ?
+            //    mergedImagePath = MergeLayers(layerImages[0], layerImages[1], collection);
+            //    Artwork artwork = new Artwork();
+            //    artwork.ArtworkName = mergedImagePath.Substring(mergedImagePath.LastIndexOf("/"), mergedImagePath.Length - 3);
+            //    artwork.ImageURL = mergedImagePath;
+            //    artwork.CollectionID = collectionID;
+            //    artwork.CreatedAt = DateTime.Now;
+            //    artwork.UpdatedAt = DateTime.Now;
+            //    am.Add(artwork);
+            //    item.Popularity++;
+            //}
 
             sb.AppendFormat(message, "1");
             return sb.ToString();
         }
 
-        private string MergeLayers(Bitmap firstLayer, Bitmap secondLayer, Collection collection)
+        private List<List<Bitmap>> CreateBitmap(List<List<string>> imagePaths)
         {
-            string savePath = GetArtworkPath(collection);
-
-            using (var bitmap = new Bitmap(firstLayer))
+            List<List<Bitmap>> layers = new List<List<Bitmap>>();
+            foreach (var list in imagePaths)
             {
+                List<Bitmap> bitmap = new List<Bitmap>();
+                foreach (var path in list)
+                {
+                    bitmap.Add(new Bitmap(path));
+                }
+                layers.Add(bitmap);
+            }
+            return layers;
+        }
+
+        private Bitmap MergeLayers(Bitmap artworkTemp, List<Bitmap> currentLayer, int layerIndex, List<List<Bitmap>> layers, Collection collection)
+        {
+            Bitmap nextArtworkTemp = artworkTemp;
+            foreach (Bitmap layer in currentLayer)
+            {
+                var bitmap = new Bitmap(nextArtworkTemp);
+
                 bitmap.MakeTransparent();
 
                 using (var canvas = Graphics.FromImage(bitmap))
                 {
-                    canvas.DrawImage(secondLayer, new Point());
+                    canvas.DrawImage(layer, new Point());
                     canvas.Save();
                 }
-                bitmap.Save(savePath, ImageFormat.Png);
+                if (layerIndex == layers.Count - 1)
+                {
+                    List<string> savePaths = GetArtworkPath(collection);
+                    bitmap.Save(savePaths[0], ImageFormat.Png);
+                    bitmap.Dispose();
+                    Artwork artwork = new Artwork();
+                    artwork.ArtworkName = savePaths[0].Substring(savePaths[0].LastIndexOf("\\") + 1);
+                    artwork.CollectionID = collection.CollectionID;
+                    artwork.CreatedAt = DateTime.Now;
+                    artwork.UpdatedAt = DateTime.Now;
+                    artwork.ImageURL = savePaths[1];
+                    am.Add(artwork);
+                    break;
+                }
+                nextArtworkTemp = MergeLayers(bitmap, layers.ElementAt(layerIndex + 1), layerIndex + 1, layers, collection);
+
             }
-            return savePath;
+
+            return nextArtworkTemp;
         }
 
-        private string GetArtworkPath(Collection collection)
+        private List<string> GetArtworkPath(Collection collection)
         {
+            List<string> paths = new List<string>();
             List<Artwork> artworksOfCollection = am.GetByCollectionID(collection.CollectionID);
             var folderName = Path.Combine("Resources", "Images", "Artworks", "col" + collection.CollectionID.ToString());
             var fileName = collection.CollectionName.Replace(" ", "_") + "_" + am.GetLastID(collection.CollectionID).ToString() + ".png";
             var folderPath = Path.Combine(Directory.GetCurrentDirectory(), folderName);
             var fullPath = Path.Combine(folderPath, fileName);
             Directory.CreateDirectory(folderPath);
-            return fullPath;
+            var publicPath = Path.Combine("img", folderName, fileName);
+            var imagePath = Path.Combine("https://localhost:44386", publicPath);
+            paths.Add(fullPath);
+            paths.Add(imagePath);
+            return paths;
         }
 
         private string[] GetImagePath(int collectionID)
