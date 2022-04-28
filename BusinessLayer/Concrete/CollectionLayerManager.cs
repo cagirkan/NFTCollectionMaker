@@ -4,6 +4,7 @@ using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 
@@ -73,6 +74,50 @@ namespace BusinessLayer.Concrete
                 }
             }
             return layerPaths;
+        }
+
+        public List<List<CollectionLayer>> GetCollectionLayersByType(List<CollectionLayer> collectionLayers)
+        {
+            List<CollectionLayer> orderedCollectionLayers = collectionLayers.OrderBy(x => x.LayerIndex).ToList();
+            var typeList = new List<int>();
+            List<List<CollectionLayer>> colLayers = new List<List<CollectionLayer>>();
+
+            foreach (var layer in orderedCollectionLayers)
+            {
+                if (typeList.Contains(layer.LayerTypeID))
+                    colLayers[typeList.IndexOf(layer.LayerTypeID)].Add(layer);
+                else
+                {
+                    colLayers.Add(new List<CollectionLayer> { layer });
+                    typeList.Add(layer.LayerTypeID);
+                }
+            }
+            return colLayers;
+        }
+
+        //UNUSED
+        public List<List<int>> GetCollectionLayerIDList(List<CollectionLayer> collectionLayers)
+        {
+            List<CollectionLayer> orderedCollectionLayers = collectionLayers.OrderBy(x => x.LayerIndex).ToList();
+            var typeList = new List<int>();
+            List<List<int>> collectionIDList = new List<List<int>>();
+
+            foreach (var layer in orderedCollectionLayers)
+            {
+                if (typeList.Contains(layer.LayerTypeID))
+                    collectionIDList[typeList.IndexOf(layer.LayerTypeID)].Add(layer.CollectionLayerID);
+                else
+                {
+                    collectionIDList.Add(new List<int> { layer.CollectionLayerID });
+                    typeList.Add(layer.LayerTypeID);
+                }
+            }
+            return collectionIDList;
+        }
+
+        public Bitmap CreateBitmap(CollectionLayer collectionLayer)
+        {
+            return new Bitmap(collectionLayer.ImagePath);
         }
     }
 }

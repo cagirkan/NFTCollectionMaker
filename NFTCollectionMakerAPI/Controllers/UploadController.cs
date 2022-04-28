@@ -51,13 +51,16 @@ namespace NFTCollectionMakerAPI.Controllers
                                               "CollectionLayers",
                                               "col" + colID.ToString(),
                                               layerTypeName);
+                var publicFolderName = Path.Combine("CollectionLayers",
+                                              "col" + colID.ToString(),
+                                              layerTypeName);
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
                 Directory.CreateDirectory(pathToSave);
                 if (file.Length > 0)
                 {
                     var fileName = prefix + "_" + DateTime.Now.ToString("MMddhhmmss") + "_" + ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
                     var fullPath = Path.Combine(pathToSave, fileName);
-                    var publicPath = Path.Combine("img", folderName, fileName);
+                    var publicPath = Path.Combine("img", publicFolderName, fileName);
                     var imagePath = Path.Combine("https://localhost:44386", publicPath); //link will change with base url
                     imagePath = imagePath.Replace("\\", "/");
                     using (var stream = new FileStream(fullPath, FileMode.Create))
