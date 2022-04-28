@@ -36,6 +36,11 @@ namespace BusinessLayer.Concrete
             return _layerTag.GetListAll();
         }
 
+        public int GetTagIDofCollection(int collectiomLayerID)
+        {
+            return _layerTag.Get(x => x.CollectionLayerID == collectiomLayerID).TagID;
+        }
+
         public void Update(LayerTag t)
         {
             _layerTag.Update(t);

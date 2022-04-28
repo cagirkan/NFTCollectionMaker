@@ -3,6 +3,7 @@ using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace BusinessLayer.Concrete
@@ -19,6 +20,15 @@ namespace BusinessLayer.Concrete
         public void Add(Artwork t)
         {
             _artworkDal.Insert(t);
+        }
+
+        public int AddWithReturn(Artwork t)
+        {
+            _artworkDal.Insert(t);
+            //Get Last index
+            return int.Parse(GetList().OrderByDescending(p => p.ArtworkID)
+                        .Select(r => r.ArtworkID)
+                        .First().ToString());
         }
 
         public void Delete(Artwork t)
