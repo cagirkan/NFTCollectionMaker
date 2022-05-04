@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BusinessLayer.Abstract
 {
@@ -10,5 +11,6 @@ namespace BusinessLayer.Abstract
         public bool isUsernameUnique(string name);
         public bool isEmailUnique(string email);
         public int getIdByUsername(string username);
+        public string GetUserName(string token);
     }
 }

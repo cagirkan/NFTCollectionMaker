@@ -24,6 +24,7 @@ namespace NFTCollectionMakerAPI.Controllers
         CollectionManager cm = new CollectionManager(new EfCollectionRepository());
         CollectionLayerManager clm = new CollectionLayerManager(new EfCollectionLayerRepository());
         ArtworkManager am = new ArtworkManager(new EfArtworkRepository());
+        UserManager um = new UserManager(new EfUserRepository());
         Context c = new Context();
         [HttpGet]
         public IActionResult GetCollections([FromHeader] object obj)
@@ -61,9 +62,9 @@ namespace NFTCollectionMakerAPI.Controllers
         [HttpPost]
         public IActionResult CreateCollection(Collection collection)
         {
+            collection.CollectionName = "New Collection";
             CollectionValidator validationRules = new CollectionValidator();
             ValidationResult result = validationRules.Validate(collection);
-
             if (result.IsValid)
             {
                 collection.CreatedAt = DateTime.Now;
@@ -81,13 +82,16 @@ namespace NFTCollectionMakerAPI.Controllers
         }
 
         [HttpPut]
-        public IActionResult EditCollection(Collection collection)
+        public async Task<IActionResult> EditCollectionAsync(Collection collection)
         {
             CollectionValidator validationRules = new CollectionValidator();
             ValidationResult result = validationRules.Validate(collection);
-
+            var token = await HttpContext.GetTokenAsync("access_token");
+            string userName = um.GetUserName(token);
             if (result.IsValid)
             {
+                collection.UserId = um.getIdByUsername(userName);
+                collection.UpdatedAt = DateTime.Now;
                 cm.Update(collection);
                 return Ok(collection);
             }

@@ -20,6 +20,8 @@ namespace NFTCollectionMakerAPI.Controllers
         public async Task<IActionResult> Populate(int collectionID)
         {
             var response = await _populateManager.PopulateCollection(collectionID);
+            if (response == null)
+                return NotFound();
             return Ok(response);
         }
     }

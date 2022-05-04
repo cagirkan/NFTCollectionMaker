@@ -37,6 +37,8 @@ namespace NFTCollectionMakerAPI.Controllers
         public IActionResult CreateLayerType(LayerType layerType)
         {
             layerType.CreatedAt = DateTime.Now;
+            if (layerType == null)
+                layerType.LayerTypeName = "New Layer";
             ltm.Add(layerType);
             return StatusCode(StatusCodes.Status201Created, layerType.LayerTypeID);
         }
@@ -44,6 +46,7 @@ namespace NFTCollectionMakerAPI.Controllers
         [HttpPut]
         public IActionResult EditLayerType(LayerType layerType)
         {
+            layerType.UpdatedAt = DateTime.Now;
             ltm.Update(layerType);
             return StatusCode(StatusCodes.Status202Accepted, layerType);
         }

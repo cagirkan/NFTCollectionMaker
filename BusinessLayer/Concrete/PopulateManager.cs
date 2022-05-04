@@ -21,7 +21,6 @@ namespace BusinessLayer.Concrete
     {
         private readonly IConfiguration _config;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private int artworkCounter = 0;
         CollectionLayerManager clm = new CollectionLayerManager(new EfCollectionLayerRepository());
         CollectionManager cm = new CollectionManager(new EfCollectionRepository());
         ArtworkManager am = new ArtworkManager(new EfArtworkRepository());
@@ -35,26 +34,22 @@ namespace BusinessLayer.Concrete
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<string> PopulateCollection(int collectionID)
+        public async Task<List<Artwork>> PopulateCollection(int collectionID)
         {
             Collection collection = cm.GetByID(collectionID);
             if (collection == null)
                 return null;
-            List<CollectionLayer> collectionLayers = clm.GetLayersOfCollection(collectionID);
-            string message = "Collection populated with {0} artworks!";
-            StringBuilder sb = new StringBuilder();
 
+            //Initialize the merge parameters
+            List<CollectionLayer> collectionLayers = clm.GetLayersOfCollection(collectionID);
             List<List<CollectionLayer>> colLayers = clm.GetCollectionLayersByType(collectionLayers);
             Bitmap bitmap = clm.CreateBitmap(colLayers[0][0]);
-            List<ArtworkLayer> artworkLayers = new List<ArtworkLayer>();
-            List<ArtworkTag> artworkTags = new List<ArtworkTag>();
-            MergeLayers(bitmap, null, colLayers[0], 0, colLayers, collection, artworkLayers, artworkTags);
+            await MergeLayers(bitmap, null, colLayers[0], 0, colLayers, collection, new List<ArtworkLayer>(), new List<ArtworkTag>());
 
-            sb.AppendFormat(message, artworkCounter);
-            return sb.ToString();
+            return am.GetByCollectionID(collectionID);
         }
 
-        private Bitmap MergeLayers(Bitmap artworkTemp,
+        private async Task<Bitmap> MergeLayers(Bitmap artworkTemp,
                                    Bitmap previousArtwork,
                                    List<CollectionLayer> currentLayer,
                                    int layerIndex,
@@ -78,7 +73,6 @@ namespace BusinessLayer.Concrete
 
                 if (layerIndex == layers.Count - 1)
                 {
-                    artworkCounter++;
                     List<string> savePaths = GetArtworkPath(collection);
                     target.Save(savePaths[0], ImageFormat.Png);
                     Artwork artwork = new Artwork();
@@ -111,7 +105,7 @@ namespace BusinessLayer.Concrete
                 else
                 {
                     previousArtworkTemp = nextArtworkTemp;
-                    nextArtworkTemp = MergeLayers(target,
+                    nextArtworkTemp = await MergeLayers(target,
                                                   nextArtworkTemp,
                                                   layers.ElementAt(layerIndex + 1),
                                                   layerIndex + 1,

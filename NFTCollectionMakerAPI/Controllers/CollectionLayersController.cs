@@ -62,7 +62,8 @@ namespace NFTCollectionMakerAPI.Controllers
                 collectionLayer.CreatedAt = DateTime.Now;
                 collectionLayer.UpdatedAt = DateTime.Now;
                 collectionLayer.Popularity = 0;
-                collectionLayer.LayerIndex = 100;
+                if(collectionLayer.LayerIndex == 0)
+                    collectionLayer.LayerIndex = 100;
                 LayerType layerType = ltym.GetByID(collectionLayer.LayerTypeID);
                 Collection collection = cm.GetByID(collectionLayer.CollectionID);
                 string filename = collectionLayer.ImageURL.Substring(collectionLayer.ImageURL.LastIndexOf("/")+1);
@@ -75,6 +76,7 @@ namespace NFTCollectionMakerAPI.Controllers
                                            layerType.LayerTypeName,
                                            filename);
                 collectionLayer.ImagePath = path;
+                collectionLayer.CollectionLayerName = filename.Substring(0, filename.Length-4);
                 int collectionLayerID = clm.AddWithReturn(collectionLayer);
                 //Create Tag
                 string tag = await _populateManager.GetTag(collectionLayer.ImageURL);
@@ -110,6 +112,7 @@ namespace NFTCollectionMakerAPI.Controllers
 
             if (result.IsValid)
             {
+                collectionLayer.UpdatedAt = DateTime.Now;
                 clm.Update(collectionLayer);
                 return StatusCode(StatusCodes.Status202Accepted, collectionLayer);
             }

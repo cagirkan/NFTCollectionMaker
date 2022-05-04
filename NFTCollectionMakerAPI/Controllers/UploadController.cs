@@ -24,6 +24,7 @@ namespace NFTCollectionMakerAPI.Controllers
     {
         CollectionManager cm = new CollectionManager(new EfCollectionRepository());
         LayerTypeManager ltm = new LayerTypeManager(new EfLayerTypeRepository());
+        UserManager um = new UserManager(new EfUserRepository());
         private readonly IWebHostEnvironment _webHostEnvironment;
 
         public UploadController(IWebHostEnvironment webHostEnvironment)
@@ -37,17 +38,7 @@ namespace NFTCollectionMakerAPI.Controllers
             string layerTypeName = ltm.GetByID(typeID).LayerTypeName;
             Collection collection = cm.GetByID(colID);
             var token = await HttpContext.GetTokenAsync("access_token");
-            var key = Encoding.ASCII.GetBytes("guessing this key shouldn't be too hard by icagirkan");
-            var handler = new JwtSecurityTokenHandler();
-            var validations = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = false,
-                ValidateAudience = false
-            };
-            var claims = handler.ValidateToken(token, validations, out var tokenSecure);
-            string userName = claims.Identity.Name;
+            string userName = um.GetUserName(token);
             string prefix = userName + "_" + "col" + colID.ToString() + layerTypeName;
             try
             {
