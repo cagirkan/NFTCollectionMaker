@@ -3,6 +3,7 @@ using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -23,6 +24,12 @@ namespace NFTCollectionMakerAPI.Controllers
     {
         CollectionManager cm = new CollectionManager(new EfCollectionRepository());
         LayerTypeManager ltm = new LayerTypeManager(new EfLayerTypeRepository());
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+        public UploadController(IWebHostEnvironment webHostEnvironment)
+        {
+            _webHostEnvironment = webHostEnvironment;
+        }
 
         [HttpPost, DisableRequestSizeLimit]
         public async Task<IActionResult> Upload(int colID, int typeID)
@@ -54,7 +61,7 @@ namespace NFTCollectionMakerAPI.Controllers
                 var publicFolderName = Path.Combine("CollectionLayers",
                                               "col" + colID.ToString(),
                                               layerTypeName);
-                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                var pathToSave = Path.Combine(_webHostEnvironment.ContentRootPath, folderName);
                 Directory.CreateDirectory(pathToSave);
                 if (file.Length > 0)
                 {

@@ -38,6 +38,8 @@ namespace BusinessLayer.Concrete
         public async Task<string> PopulateCollection(int collectionID)
         {
             Collection collection = cm.GetByID(collectionID);
+            if (collection == null)
+                return null;
             List<CollectionLayer> collectionLayers = clm.GetLayersOfCollection(collectionID);
             string message = "Collection populated with {0} artworks!";
             StringBuilder sb = new StringBuilder();
@@ -85,6 +87,7 @@ namespace BusinessLayer.Concrete
                     artwork.CreatedAt = DateTime.Now;
                     artwork.UpdatedAt = DateTime.Now;
                     artwork.ImageURL = savePaths[1];
+                    artwork.ImagePath = savePaths[0];
                     var artworkID = am.AddWithReturn(artwork);
                     foreach (var item in artworkLayers)
                     {
@@ -131,10 +134,9 @@ namespace BusinessLayer.Concrete
             var folderPath = Path.Combine(_webHostEnvironment.ContentRootPath, folderName);
             var fullPath = Path.Combine(folderPath, fileName);
             Directory.CreateDirectory(folderPath);
-            var publicPath = Path.Combine("img", "Artworks", "col" + collection.CollectionID.ToString(), fileName);
-            var imagePath = Path.Combine("https://localhost:44386", publicPath);
+            var publicPath = Path.Combine("https://localhost:44386", "img", "Artworks", "col" + collection.CollectionID.ToString(), fileName);
             paths.Add(fullPath);
-            paths.Add(imagePath);
+            paths.Add(publicPath);
             return paths;
         }
 

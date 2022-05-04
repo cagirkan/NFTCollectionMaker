@@ -22,6 +22,8 @@ namespace NFTCollectionMakerAPI.Controllers
     public class CollectionsController : ControllerBase
     {
         CollectionManager cm = new CollectionManager(new EfCollectionRepository());
+        CollectionLayerManager clm = new CollectionLayerManager(new EfCollectionLayerRepository());
+        ArtworkManager am = new ArtworkManager(new EfArtworkRepository());
         Context c = new Context();
         [HttpGet]
         public IActionResult GetCollections([FromHeader] object obj)
@@ -45,7 +47,7 @@ namespace NFTCollectionMakerAPI.Controllers
         public IActionResult GetCollectionWithArtwork(int collectionID)
         {
             var collection = c.Collections.Include(x => x.Artworks).Where(x => x.CollectionID == collectionID).FirstOrDefault();
-            if(collection == null)
+            if (collection == null)
             {
                 return NotFound();
             }
@@ -104,14 +106,22 @@ namespace NFTCollectionMakerAPI.Controllers
         {
             var collection = cm.GetByID(id);
             if (collection == null)
-            {
                 return NotFound();
-            }
-            else
-            {
-                cm.Delete(collection);
-                return Ok();
-            }
+            var collecctionLayers = clm.GetLayersOfCollection(id);
+            var artworks = am.GetByCollectionID(id);
+            
+            foreach (var item in collecctionLayers)
+                if ((System.IO.File.Exists(item.ImagePath)))
+                    System.IO.File.Delete(item.ImagePath);
+
+            foreach (var item in artworks)
+                if ((System.IO.File.Exists(item.ImagePath)))
+                    System.IO.File.Delete(item.ImagePath);
+
+
+            cm.Delete(collection);
+            return Ok();
+
         }
 
     }

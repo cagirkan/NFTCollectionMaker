@@ -84,6 +84,12 @@ namespace NFTCollectionMakerAPI.Controllers
         public IActionResult DeleteCollection(int id)
         {
             var artwork = am.GetByID(id);
+            if (artwork == null)
+                return NotFound();
+            if ((System.IO.File.Exists(artwork.ImagePath)))
+            {
+                System.IO.File.Delete(artwork.ImagePath);
+            }
             am.Delete(artwork);
             return Ok();
         }
