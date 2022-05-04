@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
@@ -19,24 +20,26 @@ namespace BusinessLayer.Concrete
     public class PopulateManager : IPopulateService
     {
         private readonly IConfiguration _config;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private int artworkCounter = 0;
         CollectionLayerManager clm = new CollectionLayerManager(new EfCollectionLayerRepository());
         CollectionManager cm = new CollectionManager(new EfCollectionRepository());
         ArtworkManager am = new ArtworkManager(new EfArtworkRepository());
-        LayerTypeManager ltm = new LayerTypeManager(new EfLayerTypeRepository());
         LayerTagManager ltam = new LayerTagManager(new EfLayerTagRepository());
         ArtworkLayerManager alm = new ArtworkLayerManager(new EfArtworkLayerRepository());
         ArtworkTagManager atm = new ArtworkTagManager(new EfArtworkTagRepository());
 
-        public PopulateManager(IConfiguration config)
+        public PopulateManager(IConfiguration config, IWebHostEnvironment webHostEnvironment)
         {
             _config = config;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<string> PopulateCollection(int collectionID)
         {
             Collection collection = cm.GetByID(collectionID);
             List<CollectionLayer> collectionLayers = clm.GetLayersOfCollection(collectionID);
-            string message = "Collection populated with {} artworks!";
+            string message = "Collection populated with {0} artworks!";
             StringBuilder sb = new StringBuilder();
 
             List<List<CollectionLayer>> colLayers = clm.GetCollectionLayersByType(collectionLayers);
@@ -45,7 +48,7 @@ namespace BusinessLayer.Concrete
             List<ArtworkTag> artworkTags = new List<ArtworkTag>();
             MergeLayers(bitmap, null, colLayers[0], 0, colLayers, collection, artworkLayers, artworkTags);
 
-            sb.AppendFormat(message, "1");
+            sb.AppendFormat(message, artworkCounter);
             return sb.ToString();
         }
 
@@ -73,6 +76,7 @@ namespace BusinessLayer.Concrete
 
                 if (layerIndex == layers.Count - 1)
                 {
+                    artworkCounter++;
                     List<string> savePaths = GetArtworkPath(collection);
                     target.Save(savePaths[0], ImageFormat.Png);
                     Artwork artwork = new Artwork();
@@ -122,10 +126,9 @@ namespace BusinessLayer.Concrete
         private List<string> GetArtworkPath(Collection collection)
         {
             List<string> paths = new List<string>();
-            List<Artwork> artworksOfCollection = am.GetByCollectionID(collection.CollectionID);
             var folderName = Path.Combine("Resources", "Images", "Artworks", "col" + collection.CollectionID.ToString());
             var fileName = collection.CollectionName.Replace(" ", "_") + "_" + (am.GetLastID(collection.CollectionID) + 1).ToString() + ".png";
-            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+            var folderPath = Path.Combine(_webHostEnvironment.ContentRootPath, folderName);
             var fullPath = Path.Combine(folderPath, fileName);
             Directory.CreateDirectory(folderPath);
             var publicPath = Path.Combine("img", "Artworks", "col" + collection.CollectionID.ToString(), fileName);
