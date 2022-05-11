@@ -4,8 +4,10 @@ using BusinessLayer.ValidationRules;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
 using System.Linq;
@@ -16,6 +18,7 @@ namespace NFTCollectionMakerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CollectionLayersController : ControllerBase
     {
         CollectionLayerManager clm = new CollectionLayerManager(new EfCollectionLayerRepository());
@@ -24,10 +27,12 @@ namespace NFTCollectionMakerAPI.Controllers
         LayerTagManager ltm = new LayerTagManager(new EfLayerTagRepository());
         LayerTypeManager ltym = new LayerTypeManager(new EfLayerTypeRepository());
         private readonly IPopulateService _populateManager;
+        private readonly IConfiguration _config;
 
-        public CollectionLayersController(IPopulateService populateManager)
+        public CollectionLayersController(IPopulateService populateManager, IConfiguration configuration)
         {
             _populateManager = populateManager;
+            _config = configuration;
         }
 
         [HttpGet]
@@ -67,8 +72,7 @@ namespace NFTCollectionMakerAPI.Controllers
                 LayerType layerType = ltym.GetByID(collectionLayer.LayerTypeID);
                 Collection collection = cm.GetByID(collectionLayer.CollectionID);
                 string filename = collectionLayer.ImageURL.Substring(collectionLayer.ImageURL.LastIndexOf("/")+1);
-                string dir = Directory.GetCurrentDirectory();
-                string path = Path.Combine(dir,
+                string path = Path.Combine(_config.GetValue<string>("ServerUrl"),
                                            "Resources",
                                            "Images",
                                            "CollectionLayers",

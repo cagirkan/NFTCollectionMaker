@@ -1,5 +1,6 @@
 using BusinessLayer.Abstract;
 using BusinessLayer.Concrete;
+using DataAccessLayer.Concrete;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,9 +36,22 @@ namespace NFTCollectionMakerAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var key = "guessing this key shouldn't be too hard by icagirkan";
-
+            var key = Configuration.GetValue<string>("JwtOptions:SecretKey");
+            ContextSettings.JWTKey = key;
+            ContextSettings.Configuration = Configuration;
+            ContextSettings.ConnectionString = Configuration.GetConnectionString("Live");
             services.AddControllers();
+            services.AddCors(options =>
+             {
+                 var corsURL = Configuration.GetSection("AllowedCorsOrigins").Value.Split(",");
+                 options.AddPolicy("CorsPolicy", o =>
+                 {
+                     o.WithOrigins(corsURL);
+                     o.AllowAnyHeader();
+                     o.AllowAnyMethod();
+                     o.AllowCredentials();
+                 });
+             });
             services.AddMvc(option => option.EnableEndpointRouting = false)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
@@ -85,12 +99,9 @@ namespace NFTCollectionMakerAPI
 
             app.UseHttpsRedirection();
 
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(
-                    Path.Combine(Directory.GetCurrentDirectory(), "Resources/Images")),
-                    RequestPath = "/img"
-            });
+            app.UseCors("CorsPolicy");
+
+            app.UseStaticFiles();
 
             app.UseRouting();
 

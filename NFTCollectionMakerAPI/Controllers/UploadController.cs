@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -26,10 +27,12 @@ namespace NFTCollectionMakerAPI.Controllers
         LayerTypeManager ltm = new LayerTypeManager(new EfLayerTypeRepository());
         UserManager um = new UserManager(new EfUserRepository());
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IConfiguration _config;
 
-        public UploadController(IWebHostEnvironment webHostEnvironment)
+        public UploadController(IWebHostEnvironment webHostEnvironment, IConfiguration config)
         {
             _webHostEnvironment = webHostEnvironment;
+            _config = config;
         }
 
         [HttpPost, DisableRequestSizeLimit]
@@ -52,14 +55,14 @@ namespace NFTCollectionMakerAPI.Controllers
                 var publicFolderName = Path.Combine("CollectionLayers",
                                               "col" + colID.ToString(),
                                               layerTypeName);
-                var pathToSave = Path.Combine(_webHostEnvironment.ContentRootPath, folderName);
+                var pathToSave = Path.Combine(_webHostEnvironment.ContentRootPath,"wwwroot", folderName);
                 Directory.CreateDirectory(pathToSave);
                 if (file.Length > 0)
                 {
                     var fileName = prefix + "_" + DateTime.Now.ToString("MMddhhmmss") + "_" + ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
                     var fullPath = Path.Combine(pathToSave, fileName);
-                    var publicPath = Path.Combine("img", publicFolderName, fileName);
-                    var imagePath = Path.Combine("https://localhost:44386", publicPath); //link will change with base url
+                    var publicPath = Path.Combine("Resources","Images", publicFolderName, fileName);
+                    var imagePath = Path.Combine(_config.GetValue<string>("ServerUrl"), publicPath);
                     imagePath = imagePath.Replace("\\", "/");
                     using (var stream = new FileStream(fullPath, FileMode.Create))
                     {

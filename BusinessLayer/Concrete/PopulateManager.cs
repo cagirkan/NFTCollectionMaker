@@ -125,10 +125,10 @@ namespace BusinessLayer.Concrete
             List<string> paths = new List<string>();
             var folderName = Path.Combine("Resources", "Images", "Artworks", "col" + collection.CollectionID.ToString());
             var fileName = collection.CollectionName.Replace(" ", "_") + "_" + (am.GetLastID(collection.CollectionID) + 1).ToString() + ".png";
-            var folderPath = Path.Combine(_webHostEnvironment.ContentRootPath, folderName);
+            var folderPath = Path.Combine(_webHostEnvironment.ContentRootPath,"wwwroot", folderName);
             var fullPath = Path.Combine(folderPath, fileName);
             Directory.CreateDirectory(folderPath);
-            var publicPath = Path.Combine("https://localhost:44386", "img", "Artworks", "col" + collection.CollectionID.ToString(), fileName);
+            var publicPath = Path.Combine(_config.GetValue<string>("ServerUrl"), "Resources", "Images", "Artworks", "col" + collection.CollectionID.ToString(), fileName);
             paths.Add(fullPath);
             paths.Add(publicPath);
             return paths;
@@ -137,8 +137,8 @@ namespace BusinessLayer.Concrete
         public async Task<string> GetTag(string image)
         {
             string apiResponse = "";
-            string api_key = "e2b7b90c-6c00-4a5c-a236-e9833b93bd28";
-            string addr = "http://164.92.249.98/api/predict?api_key=";
+            string api_key = _config.GetValue<string>("MLServer:APIKey");
+            string addr = _config.GetValue<string>("MLServer:Addr");
             using (var httpClient = new HttpClient())
             {
                 using (var response = await httpClient.GetAsync(addr + api_key + "&image=" + image))

@@ -1,7 +1,9 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.Concrete;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -69,7 +71,7 @@ namespace BusinessLayer.Concrete
 
         public string GetUserName(string token)
         {
-            var key = Encoding.ASCII.GetBytes("guessing this key shouldn't be too hard by icagirkan");
+            var key = Encoding.ASCII.GetBytes(ContextSettings.JWTKey);
             var handler = new JwtSecurityTokenHandler();
             var validations = new TokenValidationParameters
             {

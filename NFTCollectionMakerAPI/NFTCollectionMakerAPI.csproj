@@ -30,7 +30,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Resources\Images\" />
+    <None Include="wwwroot\Resources\Images\CollectionLayers\col4\body\ibrahim_col4body_0504071649_body.png" />
+    <None Include="wwwroot\Resources\Images\CollectionLayers\col4\glasses\ibrahim_col4glasses_0504071900_glass.png" />
+    <None Include="wwwroot\Resources\Images\CollectionLayers\col4\glasses\ibrahim_col4glasses_0504071931_glass2.png" />
+    <None Include="wwwroot\Resources\Images\CollectionLayers\col4\head\ibrahim_col4head_0504071758_head.png" />
+    <None Include="wwwroot\Resources\Images\CollectionLayers\col4\head\ibrahim_col4head_0504071820_head2.png" />
+    <None Include="wwwroot\Resources\Images\CollectionLayers\col4\head\ibrahim_col4head_0504071836_head3.png" />
+    <None Include="wwwroot\Resources\Images\CollectionLayers\col4\mustache\ibrahim_col4mustache_0504072005_mus.png" />
+    <None Include="wwwroot\Resources\Images\CollectionLayers\col4\mustache\ibrahim_col4mustache_0504072026_mus2.png" />
   </ItemGroup>
 
 </Project>
