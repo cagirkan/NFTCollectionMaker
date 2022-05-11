@@ -40,18 +40,8 @@ namespace NFTCollectionMakerAPI
             ContextSettings.JWTKey = key;
             ContextSettings.Configuration = Configuration;
             ContextSettings.ConnectionString = Configuration.GetConnectionString("Live");
+            services.AddCors();
             services.AddControllers();
-            services.AddCors(options =>
-             {
-                 var corsURL = Configuration.GetSection("AllowedCorsOrigins").Value.Split(",");
-                 options.AddPolicy("CorsPolicy", o =>
-                 {
-                     o.WithOrigins(corsURL);
-                     o.AllowAnyHeader();
-                     o.AllowAnyMethod();
-                     o.AllowCredentials();
-                 });
-             });
             services.AddMvc(option => option.EnableEndpointRouting = false)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
@@ -97,13 +87,18 @@ namespace NFTCollectionMakerAPI
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "NFTCollectionMakerAPI v1"));
             }
 
-            app.UseHttpsRedirection();
-
-            app.UseCors("CorsPolicy");
 
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseCors(x => x
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true) // allow any origin
+                .AllowCredentials());
+
+            app.UseHttpsRedirection();
 
             app.UseAuthentication();
 

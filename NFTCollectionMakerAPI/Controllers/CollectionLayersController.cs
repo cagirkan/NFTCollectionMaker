@@ -59,53 +59,40 @@ namespace NFTCollectionMakerAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCollectionLayer(CollectionLayer collectionLayer)
         {
-            CollectionLayerValidator validationRules = new CollectionLayerValidator();
-            ValidationResult result = validationRules.Validate(collectionLayer);
-
-            if (result.IsValid)
-            {
-                collectionLayer.CreatedAt = DateTime.Now;
-                collectionLayer.UpdatedAt = DateTime.Now;
-                collectionLayer.Popularity = 0;
-                if(collectionLayer.LayerIndex == 0)
-                    collectionLayer.LayerIndex = 100;
-                LayerType layerType = ltym.GetByID(collectionLayer.LayerTypeID);
-                Collection collection = cm.GetByID(collectionLayer.CollectionID);
-                string filename = collectionLayer.ImageURL.Substring(collectionLayer.ImageURL.LastIndexOf("/")+1);
-                string path = Path.Combine(_config.GetValue<string>("ServerUrl"),
-                                           "Resources",
-                                           "Images",
-                                           "CollectionLayers",
-                                           "col" + collection.CollectionID.ToString(),
-                                           layerType.LayerTypeName,
-                                           filename);
-                collectionLayer.ImagePath = path;
-                collectionLayer.CollectionLayerName = filename.Substring(0, filename.Length-4);
-                int collectionLayerID = clm.AddWithReturn(collectionLayer);
-                //Create Tag
-                string tag = await _populateManager.GetTag(collectionLayer.ImageURL);
-                Tag dbTag = new Tag();
-                dbTag.TagName = tag;
-                dbTag.CreatedAt = DateTime.Now;
-                dbTag.UpdatedAt = DateTime.Now;
-                int tagID = tm.AddWithReturn(dbTag);
-                //Create LayerTag
-                LayerTag layerTag = new LayerTag();
-                layerTag.CreatedAt = DateTime.Now;
-                layerTag.UpdatedAt = DateTime.Now;
-                layerTag.CollectionLayerID = collectionLayerID;
-                layerTag.TagID = tagID;
-                ltm.Add(layerTag);
-                return StatusCode(StatusCodes.Status201Created, tag);
-            }
-            else
-            {
-                foreach (var item in result.Errors)
-                {
-                    ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
-                }
-                return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-            }
+            collectionLayer.CreatedAt = DateTime.Now;
+            collectionLayer.UpdatedAt = DateTime.Now;
+            collectionLayer.Popularity = 0;
+            if (collectionLayer.LayerIndex == 0)
+                collectionLayer.LayerIndex = 100;
+            LayerType layerType = ltym.GetByID(collectionLayer.LayerTypeID);
+            Collection collection = cm.GetByID(collectionLayer.CollectionID);
+            string filename = collectionLayer.ImageURL.Substring(collectionLayer.ImageURL.LastIndexOf("/") + 1);
+            string path = Path.Combine(Directory.GetCurrentDirectory(),
+                                       "wwwroot",
+                                       "Resources",
+                                       "Images",
+                                       "CollectionLayers",
+                                       "col" + collection.CollectionID.ToString(),
+                                       layerType.LayerTypeName,
+                                       filename);
+            collectionLayer.ImagePath = path;
+            collectionLayer.CollectionLayerName = filename.Substring(0, filename.Length - 4);
+            int collectionLayerID = clm.AddWithReturn(collectionLayer);
+            //Create Tag
+            string tag = await _populateManager.GetTag(collectionLayer.ImageURL);
+            Tag dbTag = new Tag();
+            dbTag.TagName = tag;
+            dbTag.CreatedAt = DateTime.Now;
+            dbTag.UpdatedAt = DateTime.Now;
+            int tagID = tm.AddWithReturn(dbTag);
+            //Create LayerTag
+            LayerTag layerTag = new LayerTag();
+            layerTag.CreatedAt = DateTime.Now;
+            layerTag.UpdatedAt = DateTime.Now;
+            layerTag.CollectionLayerID = collectionLayerID;
+            layerTag.TagID = tagID;
+            ltm.Add(layerTag);
+            return StatusCode(StatusCodes.Status201Created, tag);
         }
 
         [HttpPut]
