@@ -1,10 +1,12 @@
 ﻿using BusinessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 namespace NFTCollectionMakerAPI.Controllers
 {
@@ -14,17 +16,23 @@ namespace NFTCollectionMakerAPI.Controllers
     public class LayerTypesController : ControllerBase
     {
         LayerTypeManager ltm = new LayerTypeManager(new EfLayerTypeRepository());
+        UserManager um = new UserManager(new EfUserRepository());
         [HttpGet]
-        public IActionResult GetLayerTypes()
+        public async Task<IActionResult> GetLayerTypes()
         {
-            var layerTypes = ltm.GetList();
-            return Ok(layerTypes);
+            var userID = um.GetUser(await HttpContext.GetTokenAsync("access_token")).UserID;
+            var layerTypes = ltm.GetLayerTypesOfUser(userID);
+            if(layerTypes == null)
+                return NotFound();
+            else
+                return Ok(layerTypes);
         }
 
         [HttpGet("{id:int}")]
-        public IActionResult GetLayerTypes(int id)
+        public async Task<IActionResult> GetLayerTypes(int id)
         {
-            var layerType = ltm.GetByID(id);
+            var userID = um.GetUser(await HttpContext.GetTokenAsync("access_token")).UserID;
+            var layerType = ltm.GetByIDAuth(id, userID);
             if (layerType == null)
             {
                 return NotFound();

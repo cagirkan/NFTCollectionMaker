@@ -83,5 +83,21 @@ namespace BusinessLayer.Concrete
             var claims = handler.ValidateToken(token, validations, out var tokenSecure);
             return claims.Identity.Name;
         }
+
+        public User GetUser(string token)
+        {
+            var key = Encoding.ASCII.GetBytes(ContextSettings.JWTKey);
+            var handler = new JwtSecurityTokenHandler();
+            var validations = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false
+            };
+            var claims = handler.ValidateToken(token, validations, out var tokenSecure);
+            var uID = getIdByUsername(claims.Identity.Name);
+            return GetByID(uID);
+        }
     }
 }

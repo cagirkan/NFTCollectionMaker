@@ -12,5 +12,6 @@ namespace BusinessLayer.Abstract
         public bool isEmailUnique(string email);
         public int getIdByUsername(string username);
         public string GetUserName(string token);
+        public User GetUser(string token);
     }
 }

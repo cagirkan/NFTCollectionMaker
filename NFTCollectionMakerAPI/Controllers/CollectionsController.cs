@@ -26,10 +26,13 @@ namespace NFTCollectionMakerAPI.Controllers
         ArtworkManager am = new ArtworkManager(new EfArtworkRepository());
         UserManager um = new UserManager(new EfUserRepository());
         Context c = new Context();
+
         [HttpGet]
-        public IActionResult GetCollections([FromHeader] object obj)
+        public async Task<IActionResult> GetCollections([FromHeader] object obj)
         {
-            var collectionsList = c.Collections.Include(x => x.Artworks);
+            var token = await HttpContext.GetTokenAsync("access_token");
+            var userID = um.GetUser(token).UserID;
+            var collectionsList = c.Collections.Include(x => x.Artworks).Where(x => x.UserId == userID);
             foreach (Collection item in collectionsList)
             {
                 foreach (var artwork in item.Artworks)
@@ -46,10 +49,16 @@ namespace NFTCollectionMakerAPI.Controllers
         }
 
         [HttpGet("{collectionID:int}")]
-        public IActionResult GetCollectionWithArtwork(int collectionID)
+        public async Task<IActionResult> GetCollectionWithArtwork(int collectionID)
         {
+            var token = await HttpContext.GetTokenAsync("access_token");
+            var userID = um.GetUser(token).UserID;
             var collection = c.Collections.Include(x => x.Artworks).Where(x => x.CollectionID == collectionID).FirstOrDefault();
-            if (collection == null)
+            if(collection.UserId != userID)
+            {
+                return Unauthorized();
+            }
+            else if (collection == null)
             {
                 return NotFound();
             }
