@@ -13,6 +13,7 @@ namespace BusinessLayer.Concrete
     public class CollectionLayerManager : ICollectionLayerService
     {
         ICollectionLayerDal _collectionLayer;
+        CollectionManager cm = new CollectionManager(new EfCollectionRepository());
 
         public CollectionLayerManager(ICollectionLayerDal collectionLayer)
         {
@@ -55,6 +56,29 @@ namespace BusinessLayer.Concrete
         public List<CollectionLayer> GetLayersOfCollection(int collectionID)
         {
             return _collectionLayer.List(x => x.CollectionID == collectionID);
+        }
+
+        public List<CollectionLayer> GetCollectionLayersOfUser(int userID)
+        {
+            List<CollectionLayer> collectionLayers = GetList();
+            List<CollectionLayer> userCollectionLayers = new List<CollectionLayer>();
+            foreach (var item in collectionLayers)
+            {
+                if (cm.GetByID(item.CollectionID).UserId == userID)
+                {
+                    userCollectionLayers.Add(item);
+                }
+            }
+            return userCollectionLayers;
+        }
+
+        public CollectionLayer GetByIDAuth(int id, int userID)
+        {
+            CollectionLayer collectionLayer = _collectionLayer.GetByID(id);
+            if (cm.GetByID(collectionLayer.CollectionID).UserId == userID)
+                return collectionLayer;
+            else
+                return null;
         }
 
         public List<List<string>> GetLayerPaths(List<CollectionLayer> collectionLayers)

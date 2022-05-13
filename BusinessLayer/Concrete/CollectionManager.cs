@@ -47,7 +47,6 @@ namespace BusinessLayer.Concrete
         public void Update(Collection t)
         {
             _collectionDal.Update(t);
-
         }
     }
 }

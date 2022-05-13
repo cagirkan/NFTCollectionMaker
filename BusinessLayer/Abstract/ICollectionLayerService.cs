@@ -13,6 +13,8 @@ namespace BusinessLayer.Abstract
         public List<List<string>> GetLayerPaths(List<CollectionLayer> collectionLayers);
         public List<List<int>> GetCollectionLayerIDList(List<CollectionLayer> collectionLayers);
         public List<List<CollectionLayer>> GetCollectionLayersByType(List<CollectionLayer> collectionLayers);
-        public Bitmap CreateBitmap(CollectionLayer collectionLayer); 
+        public Bitmap CreateBitmap(CollectionLayer collectionLayer);
+        public List<CollectionLayer> GetCollectionLayersOfUser(int userID);
+        public CollectionLayer GetByIDAuth(int id, int userID);
     }
 }

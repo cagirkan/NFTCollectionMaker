@@ -4,6 +4,7 @@ using BusinessLayer.ValidationRules;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,7 @@ namespace NFTCollectionMakerAPI.Controllers
     public class CollectionLayersController : ControllerBase
     {
         CollectionLayerManager clm = new CollectionLayerManager(new EfCollectionLayerRepository());
+        UserManager um = new UserManager(new EfUserRepository());
         CollectionManager cm = new CollectionManager(new EfCollectionRepository());
         TagManager tm = new TagManager(new EfTagRepository());
         LayerTagManager ltm = new LayerTagManager(new EfLayerTagRepository());
@@ -36,16 +38,18 @@ namespace NFTCollectionMakerAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetCollectionLayers()
+        public async Task<IActionResult> GetCollectionLayers()
         {
-            var collectionLayers = clm.GetList();
+            var userID = um.GetUser(await HttpContext.GetTokenAsync("access_token")).UserID;
+            var collectionLayers = clm.GetCollectionLayersOfUser(userID);
             return Ok(collectionLayers);
         }
 
         [HttpGet("{id:int}")]
-        public IActionResult GetCollectionLayers(int id)
+        public async Task<IActionResult> GetCollectionLayers(int id)
         {
-            var collectionLayer = clm.GetByID(id);
+            var userID = um.GetUser(await HttpContext.GetTokenAsync("access_token")).UserID;
+            CollectionLayer collectionLayer = clm.GetByIDAuth(id, userID);
             if (collectionLayer == null)
             {
                 return NotFound();
