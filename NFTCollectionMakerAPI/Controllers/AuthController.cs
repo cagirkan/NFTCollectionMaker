@@ -27,12 +27,17 @@ namespace NFTCollectionMakerAPI.Controllers
         [HttpPost("Login")]
         public IActionResult Login([FromBody]User user)
         {
+            Dictionary<string, string> result = new Dictionary<string, string>();
             var token = authService.Authenticate(user.UserName, user.Password);
-            if(token == null)
+            var userID = um.getIdByUsername(user.UserName);
+            if(token == null || user.UserName == null || user.Password == null)
             {
                 return Unauthorized();
             }
-            return Ok(token);
+            result.Add("token", token.ToString());
+            result.Add("user", user.UserName);
+            result.Add("userID", userID.ToString());
+            return Ok(result);
         }
 
         [HttpPost("Register")]

@@ -26,5 +26,14 @@ namespace NFTCollectionMakerAPI.Controllers
                 return NotFound();
             return Ok(response);
         }
+
+        [HttpPost("deleteAll")]
+        public IActionResult DeleteAll(int collectionID)
+        {
+            if(_populateManager.DeleteAllArtworks(collectionID))
+                return Ok("Artworks Deleted");
+            else
+                return StatusCode(StatusCodes.Status501NotImplemented);
+        }
     }
 }

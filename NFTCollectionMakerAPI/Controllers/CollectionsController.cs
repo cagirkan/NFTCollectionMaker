@@ -36,7 +36,7 @@ namespace NFTCollectionMakerAPI.Controllers
                 {
                     if (artwork.ImageURL != null)
                     {
-                        item.CoverImage = artwork.ImageURL;
+                        item.CoverImage = artwork.ImageURL.Replace("\\\\","/");
                         break;
                     }
                 }
@@ -62,7 +62,8 @@ namespace NFTCollectionMakerAPI.Controllers
         [HttpPost]
         public IActionResult CreateCollection(Collection collection)
         {
-            collection.CollectionName = "New Collection";
+            if(collection.CollectionName.Equals(""))
+                collection.CollectionName = "New Collection";
             CollectionValidator validationRules = new CollectionValidator();
             ValidationResult result = validationRules.Validate(collection);
             if (result.IsValid)

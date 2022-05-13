@@ -151,5 +151,25 @@ namespace BusinessLayer.Concrete
             }
             return apiResponse;
         }
+
+        public bool DeleteAllArtworks(int collectionID)
+        {
+            try
+            {
+                List<Artwork> artworksOfCollection = am.GetByCollectionID(collectionID);
+                foreach (var item in artworksOfCollection)
+                {
+                    if (File.Exists(item.ImagePath))
+                        File.Delete(item.ImagePath);
+                    am.Delete(item);
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+                throw;
+            }  
+        }
     }
 }

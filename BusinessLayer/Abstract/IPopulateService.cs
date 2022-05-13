@@ -10,5 +10,6 @@ namespace BusinessLayer.Abstract
     {
         public Task<List<Artwork>> PopulateCollection(int collectionID);
         public Task<string> GetTag(string image);
+        public bool DeleteAllArtworks(int collectionID);
     }
 }
