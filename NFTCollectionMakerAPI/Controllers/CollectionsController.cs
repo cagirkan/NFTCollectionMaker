@@ -36,7 +36,8 @@ namespace NFTCollectionMakerAPI.Controllers
                 {
                     if (artwork.ImageURL != null)
                     {
-                        item.CoverImage = artwork.ImageURL.Replace("\\\\","/");
+                        var coverimage = artwork.ImageURL.Replace("\\", "/").Replace("\\", "");
+                        item.CoverImage = coverimage;
                         break;
                     }
                 }
