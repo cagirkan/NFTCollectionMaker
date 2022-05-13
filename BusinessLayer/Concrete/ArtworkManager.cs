@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace BusinessLayer.Concrete
     public class ArtworkManager : IArtworkService
     {
         IArtworkDal _artworkDal;
+        CollectionManager cm = new CollectionManager(new EfCollectionRepository());
 
         public ArtworkManager(IArtworkDal artworkDal)
         {
@@ -44,6 +46,20 @@ namespace BusinessLayer.Concrete
         public Artwork GetByID(int id)
         {
             return _artworkDal.GetByID(id);
+        }
+
+        public List<Artwork> GetArtworkssOfUser(int userID)
+        {
+            List<Artwork> artworks = GetList();
+            List<Artwork> userArtworks = new List<Artwork>();
+            foreach (var item in artworks)
+            {
+                if (cm.GetByID(item.CollectionID).UserId == userID)
+                {
+                    userArtworks.Add(item);
+                }
+            }
+            return userArtworks;
         }
 
         public int GetLastID(int collectionID)

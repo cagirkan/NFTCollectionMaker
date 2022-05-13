@@ -10,5 +10,6 @@ namespace BusinessLayer.Abstract
         public int AddWithReturn(Artwork t);
         public List<Artwork> GetByCollectionID(int id);
         public int GetLastID(int collectionID);
+        public List<Artwork> GetArtworkssOfUser(int userID);
     }
 }

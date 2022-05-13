@@ -4,6 +4,7 @@ using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,21 +23,29 @@ namespace NFTCollectionMakerAPI.Controllers
     public class ArtworksController : ControllerBase
     {
         ArtworkManager am = new ArtworkManager(new EfArtworkRepository());
+        UserManager um = new UserManager(new EfUserRepository());
         Context c = new Context();
 
         [HttpGet]
-        public IActionResult GetArtworks()
+        public async Task<IActionResult> GetArtworks()
         {
-            return Ok(am.GetList());
+            var userID = um.GetUser(await HttpContext.GetTokenAsync("access_token")).UserID;
+            List<Artwork> artworks = am.GetArtworkssOfUser(userID);
+            return Ok(artworks);
         }
 
         [HttpGet("{ID:int}")]
-        public IActionResult GetArtworks(int id)
+        public async Task<IActionResult> GetArtworks(int id)
         {
-            var artwork = c.Artworks.Include(x => x.ArtworkLayers).Where(x => x.ArtworkID == id).FirstOrDefault();
+            var userID = um.GetUser(await HttpContext.GetTokenAsync("access_token")).UserID;
+            var artwork = c.Artworks.Include(x => x.ArtworkLayers).Include(x => x.Collection).Where(x => x.ArtworkID == id).FirstOrDefault();
             if (artwork == null)
             {
                 return NotFound();
+            }
+            else if (artwork.Collection.UserId != userID)
+            {
+                return Unauthorized();
             }
             else
             {
