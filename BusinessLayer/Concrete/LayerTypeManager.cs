@@ -12,6 +12,7 @@ namespace BusinessLayer.Concrete
     {
         ILayerTypeDal _layerType;
         CollectionManager cm = new CollectionManager(new EfCollectionRepository());
+        CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
 
         public LayerTypeManager(ILayerTypeDal layerType)
         {
@@ -20,11 +21,13 @@ namespace BusinessLayer.Concrete
 
         public void Add(LayerType t)
         {
+            cam.UpdateAnalytic(t.CollectionID, Constants.Constants.Analytics.Layers, 1);
             _layerType.Insert(t);
         }
 
         public void Delete(LayerType t)
         {
+            cam.UpdateAnalytic(t.CollectionID, Constants.Constants.Analytics.Layers, -1);
             _layerType.Delete(t);
         }
 

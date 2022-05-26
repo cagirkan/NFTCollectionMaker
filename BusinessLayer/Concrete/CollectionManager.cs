@@ -13,6 +13,7 @@ namespace BusinessLayer.Concrete
     {
         ICollectionDal _collectionDal;
         UserManager um = new UserManager(new EfUserRepository());
+        CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
 
 
         public CollectionManager(ICollectionDal collectionDal)
@@ -26,11 +27,14 @@ namespace BusinessLayer.Concrete
 
         public int AddWithReturn(Collection t)
         {
+            
             _collectionDal.Insert(t);
             //Get Last index
-            return int.Parse(GetList().OrderByDescending(p => p.CollectionID)
+            var id = int.Parse(GetList().OrderByDescending(p => p.CollectionID)
                         .Select(r => r.CollectionID)
                         .First().ToString());
+            cam.InitializeAnalytics(id);
+            return id;
         }
 
         public void Delete(Collection t)

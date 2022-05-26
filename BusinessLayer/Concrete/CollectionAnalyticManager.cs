@@ -37,7 +37,7 @@ namespace BusinessLayer.Concrete
 
         public void InitializeAnalytics(int collectionID)
         {
-            List<string> keyList = new List<string>{ "Total Artworks", "Total Layers", "Total Layer Items"};
+            List<string> keyList = new List<string>{ Constants.Constants.Analytics.Artworks, Constants.Constants.Analytics.Layers, Constants.Constants.Analytics.LayerItems};
             foreach (string key in keyList)
             {
                 CollectionAnalytic collectionAnalytic = new CollectionAnalytic();

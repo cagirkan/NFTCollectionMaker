@@ -81,7 +81,6 @@ namespace NFTCollectionMakerAPI.Controllers
             {
                 collection.CreatedAt = DateTime.Now;
                 var collectionID = cm.AddWithReturn(collection);
-                cam.InitializeAnalytics(collectionID);
                 return StatusCode(StatusCodes.Status201Created, collection);
             }
             else

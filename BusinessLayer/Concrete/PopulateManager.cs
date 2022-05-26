@@ -84,7 +84,7 @@ namespace BusinessLayer.Concrete
                     artwork.ImageURL = savePaths[1];
                     artwork.ImagePath = savePaths[0];
                     var artworkID = am.AddWithReturn(artwork);
-                    cam.UpdateAnalytic(collection.CollectionID, "Total Artworks", 1);
+                    cam.UpdateAnalytic(collection.CollectionID, Constants.Constants.Analytics.Artworks, 1);
                     foreach (var item in artworkLayers)
                     {
                         ArtworkLayer al = new ArtworkLayer();

@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using BusinessLayer.Constants;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
@@ -36,7 +37,7 @@ namespace BusinessLayer.Concrete
 
         public void Delete(Artwork t)
         {
-            cam.UpdateAnalytic(t.CollectionID, "Total Artworks", -1);
+            cam.UpdateAnalytic(t.CollectionID, Constants.Constants.Analytics.Artworks, -1);
             _artworkDal.Delete(t);
         }
 

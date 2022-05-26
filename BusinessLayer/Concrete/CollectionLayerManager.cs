@@ -14,6 +14,7 @@ namespace BusinessLayer.Concrete
     {
         ICollectionLayerDal _collectionLayer;
         CollectionManager cm = new CollectionManager(new EfCollectionRepository());
+        CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
 
         public CollectionLayerManager(ICollectionLayerDal collectionLayer)
         {
@@ -22,6 +23,7 @@ namespace BusinessLayer.Concrete
 
         public int AddWithReturn(CollectionLayer t)
         {
+            cam.UpdateAnalytic(t.CollectionID, Constants.Constants.Analytics.LayerItems, 1);
             _collectionLayer.Insert(t);
             //Get Last index
             return int.Parse(GetList().OrderByDescending(p => p.CollectionLayerID)
@@ -30,11 +32,13 @@ namespace BusinessLayer.Concrete
         }
         public void Add(CollectionLayer t)
         {
+            cam.UpdateAnalytic(t.CollectionID, Constants.Constants.Analytics.LayerItems, 1);
             _collectionLayer.Insert(t);
         }
 
         public void Delete(CollectionLayer t)
         {
+            cam.UpdateAnalytic(t.CollectionID, Constants.Constants.Analytics.LayerItems, -1);
             _collectionLayer.Delete(t);
         }
 
