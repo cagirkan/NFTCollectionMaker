@@ -22,6 +22,7 @@ namespace BusinessLayer.Concrete
         private readonly IConfiguration _config;
         private readonly IWebHostEnvironment _webHostEnvironment;
         CollectionLayerManager clm = new CollectionLayerManager(new EfCollectionLayerRepository());
+        CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
         CollectionManager cm = new CollectionManager(new EfCollectionRepository());
         ArtworkManager am = new ArtworkManager(new EfArtworkRepository());
         LayerTagManager ltam = new LayerTagManager(new EfLayerTagRepository());
@@ -83,6 +84,7 @@ namespace BusinessLayer.Concrete
                     artwork.ImageURL = savePaths[1];
                     artwork.ImagePath = savePaths[0];
                     var artworkID = am.AddWithReturn(artwork);
+                    cam.UpdateAnalytic(collection.CollectionID, "Total Artworks", 1);
                     foreach (var item in artworkLayers)
                     {
                         ArtworkLayer al = new ArtworkLayer();

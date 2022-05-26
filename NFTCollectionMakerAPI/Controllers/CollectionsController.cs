@@ -22,6 +22,7 @@ namespace NFTCollectionMakerAPI.Controllers
     public class CollectionsController : ControllerBase
     {
         CollectionManager cm = new CollectionManager(new EfCollectionRepository());
+        CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
         CollectionLayerManager clm = new CollectionLayerManager(new EfCollectionLayerRepository());
         ArtworkManager am = new ArtworkManager(new EfArtworkRepository());
         UserManager um = new UserManager(new EfUserRepository());
@@ -79,7 +80,8 @@ namespace NFTCollectionMakerAPI.Controllers
             if (result.IsValid)
             {
                 collection.CreatedAt = DateTime.Now;
-                cm.Add(collection);
+                var collectionID = cm.AddWithReturn(collection);
+                cam.InitializeAnalytics(collectionID);
                 return StatusCode(StatusCodes.Status201Created, collection);
             }
             else

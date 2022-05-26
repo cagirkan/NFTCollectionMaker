@@ -23,6 +23,7 @@ namespace NFTCollectionMakerAPI.Controllers
     public class CollectionLayersController : ControllerBase
     {
         CollectionLayerManager clm = new CollectionLayerManager(new EfCollectionLayerRepository());
+        CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
         UserManager um = new UserManager(new EfUserRepository());
         CollectionManager cm = new CollectionManager(new EfCollectionRepository());
         TagManager tm = new TagManager(new EfTagRepository());

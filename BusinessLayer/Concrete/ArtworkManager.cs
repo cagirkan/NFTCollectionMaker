@@ -13,6 +13,7 @@ namespace BusinessLayer.Concrete
     {
         IArtworkDal _artworkDal;
         CollectionManager cm = new CollectionManager(new EfCollectionRepository());
+        CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
 
         public ArtworkManager(IArtworkDal artworkDal)
         {
@@ -35,6 +36,7 @@ namespace BusinessLayer.Concrete
 
         public void Delete(Artwork t)
         {
+            cam.UpdateAnalytic(t.CollectionID, "Total Artworks", -1);
             _artworkDal.Delete(t);
         }
 
