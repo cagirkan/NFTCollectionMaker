@@ -21,6 +21,11 @@ namespace BusinessLayer.Concrete
 
         public void Add(LayerType t)
         {
+            CollectionAnalytic collectionAnalytic = new CollectionAnalytic();
+            collectionAnalytic.CollectionID = t.CollectionID;
+            collectionAnalytic.Key =Constants.Constants.Analytics.ArtworksWith + char.ToUpper(t.LayerTypeName[0]) + t.LayerTypeName.Substring(1);
+            collectionAnalytic.Value = 0;
+            cam.Add(collectionAnalytic);
             cam.UpdateAnalytic(t.CollectionID, Constants.Constants.Analytics.Layers, 1);
             _layerType.Insert(t);
         }

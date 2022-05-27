@@ -47,7 +47,7 @@ namespace NFTCollectionMakerAPI.Controllers
         public IActionResult CreateLayerType(LayerType layerType)
         {
             layerType.CreatedAt = DateTime.Now;
-            if (layerType == null)
+            if (layerType.LayerTypeName == null)
                 layerType.LayerTypeName = "New Layer";
             ltm.Add(layerType);
             return StatusCode(StatusCodes.Status201Created, layerType);

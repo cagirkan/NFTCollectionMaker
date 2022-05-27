@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
@@ -11,16 +12,23 @@ namespace BusinessLayer.Concrete
     public class TagManager : ITagService
     {
         readonly ITagDal _tagDal;
+        CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
+        LayerTagManager ltm = new LayerTagManager(new EfLayerTagRepository());
         public TagManager(ITagDal tagDal)
         {
             _tagDal = tagDal;
         }
 
-        public int AddWithReturn(Tag t)
+        public int AddWithReturn(Tag t, int collectionID)
         {
             Tag tag = _tagDal.Get(x => x.TagName == t.TagName);
             if(tag == null)
             {
+                CollectionAnalytic collectionAnalytic = new CollectionAnalytic();
+                collectionAnalytic.CollectionID = collectionID;
+                collectionAnalytic.Key = Constants.Constants.Analytics.ArtworksWith + char.ToUpper(t.TagName[0]) + t.TagName.Substring(1);
+                collectionAnalytic.Value = 0;
+                cam.Add(collectionAnalytic);
                 _tagDal.Insert(t);
                 return int.Parse(GetList().OrderByDescending(p => p.TagID)
                                 .Select(r => r.TagID)

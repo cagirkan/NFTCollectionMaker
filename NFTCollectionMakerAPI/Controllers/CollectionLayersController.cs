@@ -23,7 +23,6 @@ namespace NFTCollectionMakerAPI.Controllers
     public class CollectionLayersController : ControllerBase
     {
         CollectionLayerManager clm = new CollectionLayerManager(new EfCollectionLayerRepository());
-        CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
         UserManager um = new UserManager(new EfUserRepository());
         CollectionManager cm = new CollectionManager(new EfCollectionRepository());
         TagManager tm = new TagManager(new EfTagRepository());
@@ -83,13 +82,14 @@ namespace NFTCollectionMakerAPI.Controllers
             collectionLayer.ImagePath = path;
             collectionLayer.CollectionLayerName = filename.Substring(0, filename.Length - 4);
             int collectionLayerID = clm.AddWithReturn(collectionLayer);
+            //Increase Analytic
             //Create Tag
             string tag = await _populateManager.GetTag(collectionLayer.ImageURL);
             Tag dbTag = new Tag();
             dbTag.TagName = tag;
             dbTag.CreatedAt = DateTime.Now;
             dbTag.UpdatedAt = DateTime.Now;
-            int tagID = tm.AddWithReturn(dbTag);
+            int tagID = tm.AddWithReturn(dbTag, collection.CollectionID);
             //Create LayerTag
             LayerTag layerTag = new LayerTag();
             layerTag.CreatedAt = DateTime.Now;
@@ -136,6 +136,7 @@ namespace NFTCollectionMakerAPI.Controllers
                 {
                     System.IO.File.Delete(collectionLayer.ImagePath);
                 }
+                LayerType layerType = ltym.GetByID(collectionLayer.LayerTypeID);
                 clm.Delete(collectionLayer);
                 return Ok();
             }

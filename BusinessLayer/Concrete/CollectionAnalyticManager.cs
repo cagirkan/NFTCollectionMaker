@@ -17,6 +17,8 @@ namespace BusinessLayer.Concrete
 
         public void Add(CollectionAnalytic t)
         {
+            t.CreatedAt = DateTime.Now;
+            t.UpdatedAt = DateTime.Now;
             _collectionAnalytic.Insert(t);
         }
 
@@ -48,7 +50,6 @@ namespace BusinessLayer.Concrete
                 collectionAnalytic.UpdatedAt = DateTime.Now;
                 _collectionAnalytic.Insert(collectionAnalytic);
             }
-            
         }
 
         public void Update(CollectionAnalytic t)

@@ -8,5 +8,6 @@ namespace BusinessLayer.Abstract
     public interface ILayerTagService : IGenericService<LayerTag>
     {
         int GetTagIDofCollection(int collectiomLayerID);
+        List<string> getTagsOfArtwork(List<CollectionLayer> collectionLayers);
     }
 }

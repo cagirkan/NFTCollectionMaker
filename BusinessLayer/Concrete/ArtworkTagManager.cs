@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
@@ -10,12 +11,18 @@ namespace BusinessLayer.Concrete
     public class ArtworkTagManager : IArtworkTagService
     {
         IArtworkTagDal _artworkTagDal;
+        CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
+        ArtworkManager am = new ArtworkManager(new EfArtworkRepository());
+        TagManager tm = new TagManager(new EfTagRepository());
         public ArtworkTagManager(IArtworkTagDal artworkTagDal)
         {
             _artworkTagDal = artworkTagDal;
         }
         public void Add(ArtworkTag t)
         {
+            int colID = am.GetByID(t.ArtworkID).CollectionID;
+            string tag = tm.GetByID(t.TagID).TagName;
+            cam.UpdateAnalytic(colID, Constants.Constants.Analytics.ArtworksWith + char.ToUpper(tag[0]) + tag.Substring(1), 1);
             _artworkTagDal.Insert(t);
         }
 
