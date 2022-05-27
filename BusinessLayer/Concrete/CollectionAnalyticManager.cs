@@ -3,13 +3,12 @@ using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BusinessLayer.Concrete
 {
     public class CollectionAnalyticManager : ICollectionAnalyticService
     {
-        ICollectionAnalyticDal _collectionAnalytic;
+        readonly ICollectionAnalyticDal _collectionAnalytic;
         public CollectionAnalyticManager(ICollectionAnalyticDal collectionAnalytic)
         {
             _collectionAnalytic = collectionAnalytic;

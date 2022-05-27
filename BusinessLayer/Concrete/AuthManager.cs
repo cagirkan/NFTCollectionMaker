@@ -2,7 +2,6 @@
 using DataAccessLayer.EntityFramework;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -12,7 +11,7 @@ namespace BusinessLayer.Concrete
     public class AuthManager : IAuthService
     {
         private readonly string key;
-        UserManager um = new UserManager(new EfUserRepository());
+        readonly UserManager um = new UserManager(new EfUserRepository());
 
         public AuthManager(string key)
         {

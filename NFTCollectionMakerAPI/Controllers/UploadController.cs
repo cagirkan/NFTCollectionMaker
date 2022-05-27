@@ -7,13 +7,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace NFTCollectionMakerAPI.Controllers
@@ -23,7 +20,6 @@ namespace NFTCollectionMakerAPI.Controllers
     [Authorize]
     public class UploadController : ControllerBase
     {
-        CollectionManager cm = new CollectionManager(new EfCollectionRepository());
         LayerTypeManager ltm = new LayerTypeManager(new EfLayerTypeRepository());
         UserManager um = new UserManager(new EfUserRepository());
         private readonly IWebHostEnvironment _webHostEnvironment;
@@ -39,7 +35,6 @@ namespace NFTCollectionMakerAPI.Controllers
         public async Task<IActionResult> Upload(int colID, int typeID)
         {
             string layerTypeName = ltm.GetByID(typeID).LayerTypeName;
-            Collection collection = cm.GetByID(colID);
             var token = await HttpContext.GetTokenAsync("access_token");
             string userName = um.GetUserName(token);
             string prefix = userName + "_" + "col" + colID.ToString() + layerTypeName;

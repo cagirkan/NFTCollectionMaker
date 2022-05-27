@@ -1,15 +1,13 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BusinessLayer.Concrete
 {
     public class ArtworkLayerManager : IArtworkLayerService
     {
-        IArtworkLayerDal _artworkLayer;
+        readonly IArtworkLayerDal _artworkLayer;
 
         public ArtworkLayerManager(IArtworkLayerDal artworkLayer)
         {

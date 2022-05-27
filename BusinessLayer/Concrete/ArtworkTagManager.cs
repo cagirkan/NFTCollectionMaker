@@ -2,18 +2,16 @@
 using DataAccessLayer.Abstract;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BusinessLayer.Concrete
 {
     public class ArtworkTagManager : IArtworkTagService
     {
-        IArtworkTagDal _artworkTagDal;
-        CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
-        ArtworkManager am = new ArtworkManager(new EfArtworkRepository());
-        TagManager tm = new TagManager(new EfTagRepository());
+        readonly IArtworkTagDal _artworkTagDal;
+        readonly CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
+        readonly ArtworkManager am = new ArtworkManager(new EfArtworkRepository());
+        readonly TagManager tm = new TagManager(new EfTagRepository());
         public ArtworkTagManager(IArtworkTagDal artworkTagDal)
         {
             _artworkTagDal = artworkTagDal;

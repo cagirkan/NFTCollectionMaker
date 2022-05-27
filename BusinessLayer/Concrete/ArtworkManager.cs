@@ -1,22 +1,19 @@
 ﻿using BusinessLayer.Abstract;
-using BusinessLayer.Constants;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace BusinessLayer.Concrete
 {
     public class ArtworkManager : IArtworkService
     {
-        IArtworkDal _artworkDal;
-        CollectionManager cm = new CollectionManager(new EfCollectionRepository());
-        CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
-        CollectionLayerManager clm = new CollectionLayerManager(new EfCollectionLayerRepository());
-        LayerTagManager ltm = new LayerTagManager(new EfLayerTagRepository());
+        readonly IArtworkDal _artworkDal;
+        readonly CollectionManager cm = new CollectionManager(new EfCollectionRepository());
+        readonly CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
+        readonly CollectionLayerManager clm = new CollectionLayerManager(new EfCollectionLayerRepository());
+        readonly LayerTagManager ltm = new LayerTagManager(new EfLayerTagRepository());
 
         public ArtworkManager(IArtworkDal artworkDal)
         {
@@ -30,6 +27,7 @@ namespace BusinessLayer.Concrete
 
         public int AddWithReturn(Artwork t)
         {
+            cam.UpdateAnalytic(t.CollectionID, Constants.Constants.Analytics.Artworks, 1);
             _artworkDal.Insert(t);
             //Get Last index
             return int.Parse(GetList().OrderByDescending(p => p.ArtworkID)

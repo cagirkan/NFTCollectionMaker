@@ -2,16 +2,14 @@
 using DataAccessLayer.Abstract;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BusinessLayer.Concrete
 {
     public class LayerTagManager : ILayerTagService
     {
-        ILayerTagDal _layerTag;
-        TagManager tm = new TagManager(new EfTagRepository());
+        readonly ILayerTagDal _layerTag;
+        readonly TagManager tm = new TagManager(new EfTagRepository());
         public LayerTagManager(ILayerTagDal layerTag)
         {
             _layerTag = layerTag;

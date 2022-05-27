@@ -2,17 +2,15 @@
 using DataAccessLayer.Abstract;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BusinessLayer.Concrete
 {
     public class LayerTypeManager : ILayerTypeService
     {
-        ILayerTypeDal _layerType;
-        CollectionManager cm = new CollectionManager(new EfCollectionRepository());
-        CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
+        readonly ILayerTypeDal _layerType;
+        readonly CollectionManager cm = new CollectionManager(new EfCollectionRepository());
+        readonly CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
 
         public LayerTypeManager(ILayerTypeDal layerType)
         {

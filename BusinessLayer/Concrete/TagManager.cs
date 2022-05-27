@@ -2,18 +2,15 @@
 using DataAccessLayer.Abstract;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace BusinessLayer.Concrete
 {
     public class TagManager : ITagService
     {
         readonly ITagDal _tagDal;
-        CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
-        LayerTagManager ltm = new LayerTagManager(new EfLayerTagRepository());
+        readonly CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
         public TagManager(ITagDal tagDal)
         {
             _tagDal = tagDal;

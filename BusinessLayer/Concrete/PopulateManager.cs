@@ -3,7 +3,6 @@ using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,7 +11,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete
@@ -21,13 +19,12 @@ namespace BusinessLayer.Concrete
     {
         private readonly IConfiguration _config;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        CollectionLayerManager clm = new CollectionLayerManager(new EfCollectionLayerRepository());
-        CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
-        CollectionManager cm = new CollectionManager(new EfCollectionRepository());
-        ArtworkManager am = new ArtworkManager(new EfArtworkRepository());
-        LayerTagManager ltam = new LayerTagManager(new EfLayerTagRepository());
-        ArtworkLayerManager alm = new ArtworkLayerManager(new EfArtworkLayerRepository());
-        ArtworkTagManager atm = new ArtworkTagManager(new EfArtworkTagRepository());
+        readonly CollectionLayerManager clm = new CollectionLayerManager(new EfCollectionLayerRepository());
+        readonly CollectionManager cm = new CollectionManager(new EfCollectionRepository());
+        readonly ArtworkManager am = new ArtworkManager(new EfArtworkRepository());
+        readonly LayerTagManager ltam = new LayerTagManager(new EfLayerTagRepository());
+        readonly ArtworkLayerManager alm = new ArtworkLayerManager(new EfArtworkLayerRepository());
+        readonly ArtworkTagManager atm = new ArtworkTagManager(new EfArtworkTagRepository());
 
         public PopulateManager(IConfiguration config, IWebHostEnvironment webHostEnvironment)
         {
@@ -84,7 +81,6 @@ namespace BusinessLayer.Concrete
                     artwork.ImageURL = savePaths[1];
                     artwork.ImagePath = savePaths[0];
                     var artworkID = am.AddWithReturn(artwork);
-                    cam.UpdateAnalytic(collection.CollectionID, Constants.Constants.Analytics.Artworks, 1);
                     foreach (var item in artworkLayers)
                     {
                         ArtworkLayer al = new ArtworkLayer();
