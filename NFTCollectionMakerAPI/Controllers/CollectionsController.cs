@@ -33,7 +33,11 @@ namespace NFTCollectionMakerAPI.Controllers
         {
             var token = await HttpContext.GetTokenAsync("access_token");
             var userID = um.GetUser(token).UserID;
-            var collectionsList = c.Collections.Include(x => x.Artworks).Where(x => x.UserId == userID);
+            var collectionsList = c.Collections
+                .Include(x => x.Artworks)
+                .Where(x => x.UserId == userID)
+                .Include(x => x.LayerTypes)
+                ;
             foreach (Collection item in collectionsList)
             {
                 foreach (var artwork in item.Artworks)
@@ -54,7 +58,12 @@ namespace NFTCollectionMakerAPI.Controllers
         {
             var token = await HttpContext.GetTokenAsync("access_token");
             var userID = um.GetUser(token).UserID;
-            var collection = c.Collections.Include(x => x.Artworks).Where(x => x.CollectionID == collectionID).FirstOrDefault();
+            var collection = c.Collections
+                .Include(x => x.Artworks)
+                .Where(x => x.CollectionID == collectionID)
+                .Include(x => x.LayerTypes)
+                .Where(x => x.CollectionID == collectionID)
+                .FirstOrDefault();
             if(collection.UserId != userID)
             {
                 return Unauthorized();
