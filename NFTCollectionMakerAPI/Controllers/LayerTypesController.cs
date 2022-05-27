@@ -50,7 +50,7 @@ namespace NFTCollectionMakerAPI.Controllers
             if (layerType == null)
                 layerType.LayerTypeName = "New Layer";
             ltm.Add(layerType);
-            return StatusCode(StatusCodes.Status201Created, layerType.LayerTypeID);
+            return StatusCode(StatusCodes.Status201Created, layerType);
         }
 
         [HttpPut]
