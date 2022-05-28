@@ -29,7 +29,7 @@ namespace NFTCollectionMakerAPI.Controllers
         Context c = new Context();
 
         [HttpGet]
-        public async Task<IActionResult> GetCollections([FromHeader] object obj)
+        public async Task<IActionResult> GetCollections()
         {
             var token = await HttpContext.GetTokenAsync("access_token");
             var userID = um.GetUser(token).UserID;
@@ -63,6 +63,7 @@ namespace NFTCollectionMakerAPI.Controllers
                 .Where(x => x.CollectionID == collectionID)
                 .Include(x => x.LayerTypes)
                 .Where(x => x.CollectionID == collectionID)
+                .Include(x => x.CollectionAnalytics)
                 .FirstOrDefault();
             if(collection.UserId != userID)
             {
