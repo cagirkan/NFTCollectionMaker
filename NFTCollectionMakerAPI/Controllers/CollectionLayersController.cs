@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessLayer.Abstract;
 using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
 using DataAccessLayer.EntityFramework;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using NFTCollectionMakerAPI.Models;
 using System;
 using System.IO;
 using System.Linq;
@@ -30,11 +32,13 @@ namespace NFTCollectionMakerAPI.Controllers
         LayerTypeManager ltym = new LayerTypeManager(new EfLayerTypeRepository());
         private readonly IPopulateService _populateManager;
         private readonly IConfiguration _config;
+        private readonly IMapper _mapper;
 
-        public CollectionLayersController(IPopulateService populateManager, IConfiguration configuration)
+        public CollectionLayersController(IPopulateService populateManager, IConfiguration configuration, IMapper mapper)
         {
             _populateManager = populateManager;
             _config = configuration;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -97,7 +101,9 @@ namespace NFTCollectionMakerAPI.Controllers
             layerTag.CollectionLayerID = collectionLayerID;
             layerTag.TagID = tagID;
             ltm.Add(layerTag);
-            return StatusCode(StatusCodes.Status201Created, tag);
+            CollectionLayerViewModel response = _mapper.Map<CollectionLayerViewModel>(collectionLayer);
+            response.Tag = tag;
+            return StatusCode(StatusCodes.Status201Created, response);
         }
 
         [HttpPut]
