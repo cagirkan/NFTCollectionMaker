@@ -43,7 +43,8 @@ namespace BusinessLayer.Concrete
 
         public List<ArtworkTag> GetTagsOfArtworks(int artworkID)
         {
-            return _artworkTagDal.List(x => x.ArtworkID == artworkID);
+            var artworkTagsList =_artworkTagDal.List(x => x.ArtworkID == artworkID);
+            return artworkTagsList.GroupBy(x => x.TagID).Select(x => x.First()).ToList();
         }
 
         public void Update(ArtworkTag t)
