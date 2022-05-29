@@ -31,6 +31,7 @@ namespace NFTCollectionMakerAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Populate(int collectionID)
         {
+            _populateManager.DeleteAllArtworks(collectionID);
             var response = await _populateManager.PopulateCollection(collectionID);
             var viewModelList = new List<ArtworkViewModel>();
             if (response == null)

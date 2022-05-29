@@ -31,6 +31,9 @@ namespace BusinessLayer.Concrete
         public void Delete(LayerType t)
         {
             cam.UpdateAnalytic(t.CollectionID, Constants.Constants.Analytics.Layers, -1);
+            CollectionAnalytic collectionAnalytic = cam.GetByKey(t.CollectionID, t.LayerTypeName);
+            if(collectionAnalytic != null)
+                cam.Delete(collectionAnalytic);
             _layerType.Delete(t);
         }
 

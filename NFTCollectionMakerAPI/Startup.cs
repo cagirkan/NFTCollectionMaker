@@ -42,7 +42,7 @@ namespace NFTCollectionMakerAPI
             var key = Configuration.GetValue<string>("JwtOptions:SecretKey");
             ContextSettings.JWTKey = key;
             ContextSettings.Configuration = Configuration;
-            ContextSettings.ConnectionString = Configuration.GetConnectionString("Live");
+            ContextSettings.ConnectionString = Configuration.GetConnectionString("Test");
             services.AddCors();
             services.AddControllers().AddNewtonsoftJson(options =>
             {

@@ -51,6 +51,19 @@ namespace BusinessLayer.Concrete
             }
         }
 
+        public CollectionAnalytic GetByKey(int collectionID, string layerTypeName)
+        {
+            var collectionAnalytics =  _collectionAnalytic.List(x => x.CollectionID == collectionID);
+            foreach (var item in collectionAnalytics)
+            {
+                if(item.Key == Constants.Constants.Analytics.ArtworksWith + char.ToUpper(layerTypeName[0]) + layerTypeName.Substring(1))
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
         public void Update(CollectionAnalytic t)
         {
             _collectionAnalytic.Update(t);
