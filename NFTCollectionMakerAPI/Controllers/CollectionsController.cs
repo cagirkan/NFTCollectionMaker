@@ -67,10 +67,7 @@ namespace NFTCollectionMakerAPI.Controllers
             var token = await HttpContext.GetTokenAsync("access_token");
             var userID = um.GetUser(token).UserID;
             var collection = c.Collections
-                .Include(x => x.Artworks)
-                .Where(x => x.CollectionID == collectionID)
                 .Include(x => x.LayerTypes)
-                .ThenInclude(child => child.CollectionLayers)
                 .Where(x => x.CollectionID == collectionID)
                 .Include(x => x.CollectionAnalytics)
                 .FirstOrDefault();

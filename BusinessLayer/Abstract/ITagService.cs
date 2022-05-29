@@ -9,6 +9,6 @@ namespace BusinessLayer.Abstract
     {
         public bool isTagNameUnique(string name);
         public int AddWithReturn(Tag t, int collectionID);
-        //public string GetTagOfCollection(int collectiomLayerID);
+        public List<string> GetTagNameByArtworkID(List<int> artworkIDs);
     }
 }

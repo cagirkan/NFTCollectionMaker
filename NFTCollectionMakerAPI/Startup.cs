@@ -42,7 +42,7 @@ namespace NFTCollectionMakerAPI
             var key = Configuration.GetValue<string>("JwtOptions:SecretKey");
             ContextSettings.JWTKey = key;
             ContextSettings.Configuration = Configuration;
-            ContextSettings.ConnectionString = Configuration.GetConnectionString("Test");
+            ContextSettings.ConnectionString = Configuration.GetConnectionString("Live");
             services.AddCors();
             services.AddControllers().AddNewtonsoftJson(options =>
             {
@@ -51,6 +51,7 @@ namespace NFTCollectionMakerAPI
             services.AddMvc(option => option.EnableEndpointRouting = false)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "NFTCollectionMakerAPI", Version = "v1" });
@@ -102,6 +103,10 @@ namespace NFTCollectionMakerAPI
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "NFTCollectionMakerAPI v1"));
             }
 
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            };
 
             app.UseStaticFiles(new StaticFileOptions()
             {

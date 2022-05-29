@@ -2,6 +2,7 @@
 using DataAccessLayer.Abstract;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -37,6 +38,17 @@ namespace BusinessLayer.Concrete
             }
            
         }
+
+        public List<string> GetTagNameByArtworkID(List<int> artworkIDs)
+        {
+            List<string> tagNames = new List<string>();
+            foreach (var item in artworkIDs)
+            {
+                tagNames.Add(_tagDal.GetByID(item).TagName);
+            }
+            return tagNames;
+        }
+
         public void Add(Tag t)
         {
             _tagDal.Insert(t);

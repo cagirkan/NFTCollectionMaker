@@ -7,5 +7,6 @@ namespace BusinessLayer.Abstract
 {
     public interface IArtworkTagService : IGenericService<ArtworkTag>
     {
+        public List<int> GetTagsByID(int artworkID);
     }
 }

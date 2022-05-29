@@ -9,6 +9,7 @@ namespace NFTCollectionMakerAPI.Models
         {
             CreateMap<CollectionLayer, CollectionLayerViewModel>();
             CreateMap<Collection, CollectionViewModel>();
+            CreateMap<Artwork, ArtworkViewModel>();
         }
     }
 }

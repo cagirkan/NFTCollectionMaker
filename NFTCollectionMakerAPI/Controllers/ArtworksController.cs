@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Concrete;
+﻿using AutoMapper;
+using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NFTCollectionMakerAPI.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,9 +24,17 @@ namespace NFTCollectionMakerAPI.Controllers
     [Authorize]
     public class ArtworksController : ControllerBase
     {
+        private readonly IMapper _mapper;
         ArtworkManager am = new ArtworkManager(new EfArtworkRepository());
         UserManager um = new UserManager(new EfUserRepository());
+        ArtworkTagManager atm = new ArtworkTagManager(new EfArtworkTagRepository());
+        TagManager tm = new TagManager(new EfTagRepository());
         Context c = new Context();
+
+        public ArtworksController(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetArtworks()
@@ -56,7 +66,17 @@ namespace NFTCollectionMakerAPI.Controllers
         [HttpGet("CollectionID/{collectionID:int}")]
         public IActionResult GetArtworksOfCollection(int collectionID)
         {
-            return Ok(am.GetByCollectionID(collectionID));
+            var viewModelList = new List<ArtworkViewModel>();
+            var artworks = am.GetByCollectionID(collectionID);
+            foreach (var item in artworks)
+            {
+                List<int> tags = atm.GetTagsByID(item.ArtworkID);
+                var tagNamesList = tm.GetTagNameByArtworkID(tags);
+                ArtworkViewModel viewModel = _mapper.Map<ArtworkViewModel>(item);
+                viewModel.Tags = tagNamesList;
+                viewModelList.Add(viewModel);
+            }
+            return Ok(viewModelList);
         }
 
         [HttpPost]
