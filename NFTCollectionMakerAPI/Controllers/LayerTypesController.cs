@@ -20,7 +20,7 @@ namespace NFTCollectionMakerAPI.Controllers
     {
         LayerTypeManager ltm = new LayerTypeManager(new EfLayerTypeRepository());
         UserManager um = new UserManager(new EfUserRepository());
-        LayerTagManager ltam = new LayerTagManager(new EfLayerTagRepository());
+        CollectionLayerManager clm = new CollectionLayerManager(new EfCollectionLayerRepository());
         Context c = new Context();
         [HttpGet]
         public async Task<IActionResult> GetLayerTypes()
@@ -72,6 +72,7 @@ namespace NFTCollectionMakerAPI.Controllers
         [HttpDelete("{id:int}")]
         public IActionResult DeleteLayerType(int id)
         {
+            clm.DeleteLayersOfType(id);
             var layerType = ltm.GetByID(id);
             if (layerType == null)
             {

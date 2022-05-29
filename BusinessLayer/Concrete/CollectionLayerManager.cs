@@ -2,6 +2,7 @@
 using DataAccessLayer.Abstract;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -72,6 +73,15 @@ namespace BusinessLayer.Concrete
                 }
             }
             return userCollectionLayers;
+        }
+
+        public void DeleteLayersOfType(int id)
+        {
+            List<CollectionLayer> collectionLayers = _collectionLayer.List(x => x.LayerTypeID == id);
+            foreach (var item in collectionLayers)
+            {
+                _collectionLayer.Delete(item);
+            }
         }
 
         public CollectionLayer GetByIDAuth(int id, int userID)

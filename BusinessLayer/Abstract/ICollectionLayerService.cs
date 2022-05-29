@@ -16,5 +16,6 @@ namespace BusinessLayer.Abstract
         public Bitmap CreateBitmap(CollectionLayer collectionLayer);
         public List<CollectionLayer> GetCollectionLayersOfUser(int userID);
         public CollectionLayer GetByIDAuth(int id, int userID);
+        public void DeleteLayersOfType(int id);
     }
 }
