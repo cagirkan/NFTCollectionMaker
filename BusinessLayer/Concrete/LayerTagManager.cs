@@ -40,6 +40,12 @@ namespace BusinessLayer.Concrete
             return _layerTag.Get(x => x.CollectionLayerID == collectiomLayerID).TagID;
         }
 
+        //public string GetTagOfCollection(int collectiomLayerID)
+        //{
+        //    var tagID = GetTagIDofCollection(collectiomLayerID); 
+        //    return tm.GetByID(tagID).TagName;
+        //}
+
         public void Update(LayerTag t)
         {
             _layerTag.Update(t);

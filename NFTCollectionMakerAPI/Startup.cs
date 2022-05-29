@@ -44,7 +44,10 @@ namespace NFTCollectionMakerAPI
             ContextSettings.Configuration = Configuration;
             ContextSettings.ConnectionString = Configuration.GetConnectionString("Test");
             services.AddCors();
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
             services.AddMvc(option => option.EnableEndpointRouting = false)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);

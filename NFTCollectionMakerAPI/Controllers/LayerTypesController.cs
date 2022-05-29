@@ -1,11 +1,14 @@
 ﻿using BusinessLayer.Concrete;
+using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NFTCollectionMakerAPI.Controllers
@@ -17,6 +20,8 @@ namespace NFTCollectionMakerAPI.Controllers
     {
         LayerTypeManager ltm = new LayerTypeManager(new EfLayerTypeRepository());
         UserManager um = new UserManager(new EfUserRepository());
+        LayerTagManager ltam = new LayerTagManager(new EfLayerTagRepository());
+        Context c = new Context();
         [HttpGet]
         public async Task<IActionResult> GetLayerTypes()
         {
@@ -32,7 +37,10 @@ namespace NFTCollectionMakerAPI.Controllers
         public async Task<IActionResult> GetLayerTypes(int id)
         {
             var userID = um.GetUser(await HttpContext.GetTokenAsync("access_token")).UserID;
-            var layerType = ltm.GetByIDAuth(id, userID);
+            var layerType = c.LayerTypes
+                .Where(x => x.LayerTypeID == id)
+                .Include(x => x.CollectionLayers).ThenInclude(x => x.LayerTags).ThenInclude(x => x.Tag);
+                ;
             if (layerType == null)
             {
                 return NotFound();

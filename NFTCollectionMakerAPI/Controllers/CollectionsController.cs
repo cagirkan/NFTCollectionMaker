@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Concrete;
+﻿using AutoMapper;
+using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NFTCollectionMakerAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +29,12 @@ namespace NFTCollectionMakerAPI.Controllers
         ArtworkManager am = new ArtworkManager(new EfArtworkRepository());
         UserManager um = new UserManager(new EfUserRepository());
         Context c = new Context();
+        private readonly IMapper _mapper;
+
+        public CollectionsController(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetCollections()
@@ -62,6 +70,7 @@ namespace NFTCollectionMakerAPI.Controllers
                 .Include(x => x.Artworks)
                 .Where(x => x.CollectionID == collectionID)
                 .Include(x => x.LayerTypes)
+                .ThenInclude(child => child.CollectionLayers)
                 .Where(x => x.CollectionID == collectionID)
                 .Include(x => x.CollectionAnalytics)
                 .FirstOrDefault();
@@ -75,7 +84,8 @@ namespace NFTCollectionMakerAPI.Controllers
             }
             else
             {
-                return Ok(collection);
+                var response = _mapper.Map<CollectionViewModel>(collection);
+                return Ok(response);
             }
         }
 

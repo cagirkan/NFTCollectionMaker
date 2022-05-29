@@ -8,6 +8,7 @@ namespace NFTCollectionMakerAPI.Models
         public MappingProfile()
         {
             CreateMap<CollectionLayer, CollectionLayerViewModel>();
+            CreateMap<Collection, CollectionViewModel>();
         }
     }
 }

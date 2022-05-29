@@ -21,6 +21,7 @@ namespace EntityLayer.Concrete
         public Collection Collection { get; set; }
         public int LayerTypeID { get; set; }
         public LayerType LayerType { get; set; }
+        public List<LayerTag> LayerTags { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         

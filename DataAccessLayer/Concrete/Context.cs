@@ -53,6 +53,7 @@ namespace DataAccessLayer.Concrete
             modelBuilder.Entity<CollectionLayer>().HasOne(e => e.Collection).WithMany(p => p.CollectionLayers).HasForeignKey(f => f.CollectionID).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<CollectionLayer>().HasOne(e => e.LayerType).WithMany(p => p.CollectionLayers).HasForeignKey(f => f.LayerTypeID).OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<LayerTag>().HasOne(e => e.Tag).WithMany(p => p.LayerTags).HasForeignKey(f => f.TagID).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<LayerTag>().HasOne(e => e.CollectionLayer).WithMany(p => p.LayerTags).HasForeignKey(f => f.CollectionLayerID).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<LayerType>().HasOne(e => e.Collection).WithMany(p => p.LayerTypes).HasForeignKey(f => f.CollectionID).OnDelete(DeleteBehavior.Cascade);
         }
     } 
