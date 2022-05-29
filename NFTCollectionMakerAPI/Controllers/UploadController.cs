@@ -11,6 +11,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace NFTCollectionMakerAPI.Controllers
@@ -36,6 +37,7 @@ namespace NFTCollectionMakerAPI.Controllers
         {
             var rand = new Random();
             string layerTypeName = ltm.GetByID(typeID).LayerTypeName;
+            layerTypeName = Regex.Replace(layerTypeName, "[^a-zA-Z0-9_.]+", "", RegexOptions.Compiled);
             var token = await HttpContext.GetTokenAsync("access_token");
             string userName = um.GetUserName(token);
             string prefix = userName + "_" + "col" + colID.ToString() + layerTypeName;
