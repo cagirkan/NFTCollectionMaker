@@ -58,7 +58,7 @@ namespace NFTCollectionMakerAPI.Controllers
                 if (file.Length > 0)
                 {
                     var uploadedFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                    var fileExtension = uploadedFileName.Substring(uploadedFileName.Length - 4);
+                    var fileExtension = uploadedFileName.Substring(uploadedFileName.LastIndexOf('.'));
                     var fileName = prefix + "_" + DateTime.Now.ToString("MMddhhmmss") + "_" + rand.Next().ToString() + fileExtension;
                     var fullPath = Path.Combine(pathToSave, fileName);
                     var publicPath = Path.Combine("Resources","Images", publicFolderName, fileName);

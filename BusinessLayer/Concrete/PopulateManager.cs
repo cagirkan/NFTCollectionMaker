@@ -25,6 +25,7 @@ namespace BusinessLayer.Concrete
         readonly LayerTagManager ltam = new LayerTagManager(new EfLayerTagRepository());
         readonly ArtworkLayerManager alm = new ArtworkLayerManager(new EfArtworkLayerRepository());
         readonly ArtworkTagManager atm = new ArtworkTagManager(new EfArtworkTagRepository());
+        int trycount = 0;
 
         public PopulateManager(IConfiguration config, IWebHostEnvironment webHostEnvironment)
         {
@@ -68,11 +69,14 @@ namespace BusinessLayer.Concrete
                 graphics.DrawImage(layerBitmap, 0, 0);
                 artworkLayers.Add(new ArtworkLayer { CollectionLayerID = layer.CollectionLayerID });
                 artworkTags.Add(new ArtworkTag { TagID = ltam.GetTagIDofCollection(layer.CollectionLayerID) });
-
+                target.Save(trycount + ".png", ImageFormat.Png);
+                trycount++;
                 if (layerIndex == layers.Count - 1)
                 {
                     List<string> savePaths = GetArtworkPath(collection);
                     target.Save(savePaths[0], ImageFormat.Png);
+                    target.Dispose();
+                    graphics.Dispose();
                     Artwork artwork = new Artwork();
                     artwork.ArtworkName = savePaths[0].Substring(savePaths[0].LastIndexOf("\\") + 1);
                     artwork.CollectionID = collection.CollectionID;

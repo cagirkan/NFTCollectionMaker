@@ -15,6 +15,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace NFTCollectionMakerAPI.Controllers
@@ -75,13 +76,14 @@ namespace NFTCollectionMakerAPI.Controllers
             LayerType layerType = ltym.GetByID(collectionLayer.LayerTypeID);
             Collection collection = cm.GetByID(collectionLayer.CollectionID);
             string filename = collectionLayer.ImageURL.Substring(collectionLayer.ImageURL.LastIndexOf("/") + 1);
+            var layerTypeName = Regex.Replace(layerType.LayerTypeName, "[^a-zA-Z0-9_.]+", "", RegexOptions.Compiled);
             string path = Path.Combine(Directory.GetCurrentDirectory(),
                                        "wwwroot",
                                        "Resources",
                                        "Images",
                                        "CollectionLayers",
                                        "col" + collection.CollectionID.ToString(),
-                                       layerType.LayerTypeName,
+                                       layerTypeName,
                                        filename);
             collectionLayer.ImagePath = path;
             collectionLayer.CollectionLayerName = filename.Substring(0, filename.Length - 4);
