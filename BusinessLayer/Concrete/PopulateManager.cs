@@ -78,7 +78,7 @@ namespace BusinessLayer.Concrete
                     artwork.CollectionID = collection.CollectionID;
                     artwork.CreatedAt = DateTime.Now;
                     artwork.UpdatedAt = DateTime.Now;
-                    artwork.ImageURL = savePaths[1];
+                    artwork.ImageURL = savePaths[1].Replace("\\", "/").Replace("\\", "");
                     artwork.ImagePath = savePaths[0];
                     var artworkID = am.AddWithReturn(artwork);
                     foreach (var item in artworkLayers)
