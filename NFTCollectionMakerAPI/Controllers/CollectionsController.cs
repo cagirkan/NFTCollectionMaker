@@ -69,7 +69,6 @@ namespace NFTCollectionMakerAPI.Controllers
             var collection = c.Collections
                 .Include(x => x.LayerTypes)
                 .Where(x => x.CollectionID == collectionID)
-                .Include(x => x.CollectionAnalytics)
                 .FirstOrDefault();
             if(collection.UserId != userID)
             {
