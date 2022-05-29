@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Concrete;
+using BusinessLayer.Constants;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
@@ -21,6 +22,7 @@ namespace NFTCollectionMakerAPI.Controllers
         LayerTypeManager ltm = new LayerTypeManager(new EfLayerTypeRepository());
         UserManager um = new UserManager(new EfUserRepository());
         CollectionLayerManager clm = new CollectionLayerManager(new EfCollectionLayerRepository());
+        CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
         Context c = new Context();
         [HttpGet]
         public async Task<IActionResult> GetLayerTypes()
@@ -72,7 +74,6 @@ namespace NFTCollectionMakerAPI.Controllers
         [HttpDelete("{id:int}")]
         public IActionResult DeleteLayerType(int id)
         {
-            clm.DeleteLayersOfType(id);
             var layerType = ltm.GetByID(id);
             if (layerType == null)
             {
@@ -80,6 +81,9 @@ namespace NFTCollectionMakerAPI.Controllers
             }
             else
             {
+                clm.DeleteLayersOfType(id);
+                CollectionAnalytic collectionAnalytic = cam.GetByKey(layerType.CollectionID, Constants.Analytics.ArtworksWith + char.ToUpper(layerType.LayerTypeName[0]) + layerType.LayerTypeName.Substring(1));
+                cam.Delete(collectionAnalytic);
                 ltm.Delete(layerType);
                 return Ok();
             }
