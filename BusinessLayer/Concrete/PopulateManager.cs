@@ -25,7 +25,6 @@ namespace BusinessLayer.Concrete
         readonly LayerTagManager ltam = new LayerTagManager(new EfLayerTagRepository());
         readonly ArtworkLayerManager alm = new ArtworkLayerManager(new EfArtworkLayerRepository());
         readonly ArtworkTagManager atm = new ArtworkTagManager(new EfArtworkTagRepository());
-        int trycount = 0;
 
         public PopulateManager(IConfiguration config, IWebHostEnvironment webHostEnvironment)
         {
@@ -69,8 +68,6 @@ namespace BusinessLayer.Concrete
                 graphics.DrawImage(layerBitmap, 0, 0);
                 artworkLayers.Add(new ArtworkLayer { CollectionLayerID = layer.CollectionLayerID });
                 artworkTags.Add(new ArtworkTag { TagID = ltam.GetTagIDofCollection(layer.CollectionLayerID) });
-                target.Save(trycount + ".png", ImageFormat.Png);
-                trycount++;
                 if (layerIndex == layers.Count - 1)
                 {
                     List<string> savePaths = GetArtworkPath(collection);
@@ -146,7 +143,6 @@ namespace BusinessLayer.Concrete
                 using (var response = await httpClient.GetAsync(addr + api_key + "&image=" + image))
                 {
                     apiResponse = await response.Content.ReadAsStringAsync();
-                    //tag = JsonConvert.DeserializeObject<string>(apiResponse);
                     if (apiResponse.Length > 150)
                         return "undefined";
                 }

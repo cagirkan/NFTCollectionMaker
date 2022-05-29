@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NFTCollectionMakerAPI.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NFTCollectionMakerAPI.Controllers
@@ -39,7 +40,7 @@ namespace NFTCollectionMakerAPI.Controllers
             foreach (var item in response)
             {
                 List<int> tags = atm.GetTagsByID(item.ArtworkID);
-                var tagNamesList = tm.GetTagNameByArtworkID(tags);
+                var tagNamesList = tm.GetTagNameByArtworkID(tags).Distinct().ToList();
                 ArtworkViewModel viewModel = _mapper.Map<ArtworkViewModel>(item);
                 viewModel.Tags = tagNamesList;
                 viewModelList.Add(viewModel);

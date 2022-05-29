@@ -105,7 +105,6 @@ namespace NFTCollectionMakerAPI.Controllers
         {
             ArtworkValidator validationRules = new ArtworkValidator();
             ValidationResult result = validationRules.Validate(artwork);
-            var requestedArtwork = am.GetByID(artwork.ArtworkID);
             
                 am.Update(artwork);
                 return Ok(artwork);
