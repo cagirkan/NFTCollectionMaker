@@ -103,14 +103,14 @@ namespace BusinessLayer.Concrete
                 else
                 {
                     previousArtworkTemp = nextArtworkTemp;
-                    nextArtworkTemp = await MergeLayers(target,
-                                                  nextArtworkTemp,
-                                                  layers.ElementAt(layerIndex + 1),
-                                                  layerIndex + 1,
-                                                  layers,
-                                                  collection,
-                                                  artworkLayers,
-                                                  artworkTags);
+                    await MergeLayers(target,
+                                    nextArtworkTemp,
+                                    layers.ElementAt(layerIndex + 1),
+                                    layerIndex + 1,
+                                    layers,
+                                    collection,
+                                    artworkLayers,
+                                    artworkTags);
                 }
             }
             if (artworkLayers.Count != 0) artworkLayers.RemoveAt(artworkLayers.Count - 1);
