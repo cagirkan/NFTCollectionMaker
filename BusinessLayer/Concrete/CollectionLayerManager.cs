@@ -37,6 +37,10 @@ namespace BusinessLayer.Concrete
 
         public void Delete(CollectionLayer t)
         {
+            if ((System.IO.File.Exists(t.ImagePath)))
+            {
+                System.IO.File.Delete(t.ImagePath);
+            }
             cam.UpdateAnalytic(t.CollectionID, Constants.Constants.Analytics.LayerItems, -1);
             _collectionLayer.Delete(t);
         }
@@ -80,7 +84,7 @@ namespace BusinessLayer.Concrete
             List<CollectionLayer> collectionLayers = _collectionLayer.List(x => x.LayerTypeID == id);
             foreach (var item in collectionLayers)
             {
-                _collectionLayer.Delete(item);
+                Delete(item);
             }
         }
 

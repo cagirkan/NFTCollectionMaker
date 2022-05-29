@@ -138,11 +138,7 @@ namespace NFTCollectionMakerAPI.Controllers
             }
             else
             {
-                if ((System.IO.File.Exists(collectionLayer.ImagePath)))
-                {
-                    System.IO.File.Delete(collectionLayer.ImagePath);
-                }
-                LayerType layerType = ltym.GetByID(collectionLayer.LayerTypeID);
+                
                 clm.Delete(collectionLayer);
                 return Ok();
             }
