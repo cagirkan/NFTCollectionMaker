@@ -36,6 +36,11 @@ namespace BusinessLayer.Concrete
             return _collectionAnalytic.GetListAll();
         }
 
+        public List<CollectionAnalytic> GetByCollectionID(int id)
+        {
+            return _collectionAnalytic.List(x => x.CollectionID == id);
+        }
+
         public void InitializeAnalytics(int collectionID)
         {
             List<string> keyList = new List<string>{ Constants.Constants.Analytics.Artworks, Constants.Constants.Analytics.Layers, Constants.Constants.Analytics.LayerItems};

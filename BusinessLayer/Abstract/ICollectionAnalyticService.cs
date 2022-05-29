@@ -9,5 +9,6 @@ namespace BusinessLayer.Abstract
     {
         public void InitializeAnalytics(int collectionID);
         public void UpdateAnalytic(int collectionID, string key, int value);
+        public CollectionAnalytic GetByKey(int collectionID, string layerTypeName);
     }
 }
