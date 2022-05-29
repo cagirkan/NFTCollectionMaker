@@ -34,6 +34,7 @@ namespace NFTCollectionMakerAPI.Controllers
         [HttpPost, DisableRequestSizeLimit]
         public async Task<IActionResult> Upload(int colID, int typeID)
         {
+            var rand = new Random();
             string layerTypeName = ltm.GetByID(typeID).LayerTypeName;
             var token = await HttpContext.GetTokenAsync("access_token");
             string userName = um.GetUserName(token);
@@ -54,7 +55,9 @@ namespace NFTCollectionMakerAPI.Controllers
                 Directory.CreateDirectory(pathToSave);
                 if (file.Length > 0)
                 {
-                    var fileName = prefix + "_" + DateTime.Now.ToString("MMddhhmmss") + "_" + ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    var uploadedFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    var fileExtension = uploadedFileName.Substring(uploadedFileName.Length - 4);
+                    var fileName = prefix + "_" + DateTime.Now.ToString("MMddhhmmss") + "_" + rand.Next().ToString() + fileExtension;
                     var fullPath = Path.Combine(pathToSave, fileName);
                     var publicPath = Path.Combine("Resources","Images", publicFolderName, fileName);
                     var imagePath = Path.Combine(_config.GetValue<string>("ServerUrl"), publicPath);
