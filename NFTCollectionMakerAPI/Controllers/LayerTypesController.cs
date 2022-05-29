@@ -83,7 +83,8 @@ namespace NFTCollectionMakerAPI.Controllers
             {
                 clm.DeleteLayersOfType(id);
                 CollectionAnalytic collectionAnalytic = cam.GetByKey(layerType.CollectionID, Constants.Analytics.ArtworksWith + char.ToUpper(layerType.LayerTypeName[0]) + layerType.LayerTypeName.Substring(1));
-                cam.Delete(collectionAnalytic);
+                if(collectionAnalytic != null)
+                    cam.Delete(collectionAnalytic);
                 ltm.Delete(layerType);
                 return Ok();
             }

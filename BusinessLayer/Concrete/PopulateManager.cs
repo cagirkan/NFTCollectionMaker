@@ -41,9 +41,9 @@ namespace BusinessLayer.Concrete
             //Initialize the merge parameters
             List<CollectionLayer> collectionLayers = clm.GetLayersOfCollection(collectionID);
             List<List<CollectionLayer>> colLayers = clm.GetCollectionLayersByType(collectionLayers);
-            Bitmap bitmap = clm.CreateBitmap(colLayers[0][0]);
+            Bitmap bitmap = new Bitmap(colLayers[0][0].ImagePath);
             await MergeLayers(bitmap, null, colLayers[0], 0, colLayers, collection, new List<ArtworkLayer>(), new List<ArtworkTag>());
-
+            bitmap.Dispose();
             return am.GetByCollectionID(collectionID);
         }
 
@@ -60,12 +60,13 @@ namespace BusinessLayer.Concrete
             Bitmap previousArtworkTemp = previousArtwork;
             foreach (CollectionLayer layer in currentLayer)
             {
-                Bitmap layerBitmap = new Bitmap(clm.CreateBitmap(layer));
+                Bitmap layerBitmap = new Bitmap(layer.ImagePath);
                 var target = new Bitmap(nextArtworkTemp.Width, nextArtworkTemp.Height, PixelFormat.Format32bppArgb);
                 var graphics = Graphics.FromImage(target);
                 graphics.CompositingMode = CompositingMode.SourceOver; // this is the default, but just to be clear
                 graphics.DrawImage(nextArtworkTemp, 0, 0);
                 graphics.DrawImage(layerBitmap, 0, 0);
+                layerBitmap.Dispose();
                 artworkLayers.Add(new ArtworkLayer { CollectionLayerID = layer.CollectionLayerID });
                 artworkTags.Add(new ArtworkTag { TagID = ltam.GetTagIDofCollection(layer.CollectionLayerID) });
                 if (layerIndex == layers.Count - 1)
@@ -116,6 +117,7 @@ namespace BusinessLayer.Concrete
             }
             if (artworkLayers.Count != 0) artworkLayers.RemoveAt(artworkLayers.Count - 1);
             if (artworkTags.Count != 0) artworkTags.RemoveAt(artworkTags.Count - 1);
+            nextArtworkTemp.Dispose();
             return previousArtworkTemp;
         }
 

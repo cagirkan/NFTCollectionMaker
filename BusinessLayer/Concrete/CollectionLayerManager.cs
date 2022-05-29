@@ -14,6 +14,7 @@ namespace BusinessLayer.Concrete
         readonly ICollectionLayerDal _collectionLayer;
         readonly CollectionManager cm = new CollectionManager(new EfCollectionRepository());
         readonly CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
+        readonly ArtworkLayerManager alm = new ArtworkLayerManager(new EfArtworkLayerRepository());
 
         public CollectionLayerManager(ICollectionLayerDal collectionLayer)
         {
@@ -42,6 +43,7 @@ namespace BusinessLayer.Concrete
                 System.IO.File.Delete(t.ImagePath);
             }
             cam.UpdateAnalytic(t.CollectionID, Constants.Constants.Analytics.LayerItems, -1);
+            alm.DeleteCollectionLayersFromAL(t.CollectionLayerID);
             _collectionLayer.Delete(t);
         }
 
@@ -82,9 +84,12 @@ namespace BusinessLayer.Concrete
         public void DeleteLayersOfType(int id)
         {
             List<CollectionLayer> collectionLayers = _collectionLayer.List(x => x.LayerTypeID == id);
-            foreach (var item in collectionLayers)
+            if(collectionLayers != null)
             {
-                Delete(item);
+                foreach (var item in collectionLayers)
+                {
+                    Delete(item);
+                }
             }
         }
 
@@ -153,11 +158,6 @@ namespace BusinessLayer.Concrete
                 }
             }
             return collectionIDList;
-        }
-
-        public Bitmap CreateBitmap(CollectionLayer collectionLayer)
-        {
-            return new Bitmap(collectionLayer.ImagePath);
         }
     }
 }

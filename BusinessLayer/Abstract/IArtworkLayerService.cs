@@ -7,5 +7,6 @@ namespace BusinessLayer.Abstract
 {
     public interface IArtworkLayerService : IGenericService<ArtworkLayer>
     {
+        public void DeleteCollectionLayersFromAL(int collectionLayerID);
     }
 }

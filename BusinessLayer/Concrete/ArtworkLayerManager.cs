@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
 using EntityLayer.Concrete;
+using System;
 using System.Collections.Generic;
 
 namespace BusinessLayer.Concrete
@@ -37,6 +38,15 @@ namespace BusinessLayer.Concrete
         public void Update(ArtworkLayer t)
         {
             _artworkLayer.Update(t);
+        }
+
+        public void DeleteCollectionLayersFromAL(int collectionLayerID)
+        {
+            var layers = _artworkLayer.List(x => x.CollectionLayerID == collectionLayerID);
+            foreach (var item in layers)
+            {
+                Delete(item);
+            }
         }
     }
 }
