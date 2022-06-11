@@ -2,6 +2,7 @@
 using DataAccessLayer.Abstract;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
+using System;
 using System.Collections.Generic;
 
 namespace BusinessLayer.Concrete
@@ -10,6 +11,7 @@ namespace BusinessLayer.Concrete
     {
         readonly ILayerTagDal _layerTag;
         readonly TagManager tm = new TagManager(new EfTagRepository());
+        readonly CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
         public LayerTagManager(ILayerTagDal layerTag)
         {
             _layerTag = layerTag;
@@ -17,6 +19,9 @@ namespace BusinessLayer.Concrete
 
         public void Add(LayerTag t)
         {
+            t.CreatedAt = DateTime.Now;
+            t.UpdatedAt = DateTime.Now;
+            cam.UpdateAnalytic(t.CollectionLayer.CollectionID, Constants.Constants.Analytics.LayerItems, 1);
             _layerTag.Insert(t);
         }
 

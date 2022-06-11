@@ -39,6 +39,19 @@ namespace BusinessLayer.Concrete
            
         }
 
+        public Tag GetByName(string tagName)
+        {
+            return _tagDal.Get(x => x.TagName == tagName);
+        }
+
+        public bool IsTagExitst(string tagName)
+        {
+            Tag tag = _tagDal.Get(x => x.TagName == tagName);
+            if(tag == null)
+                return false;
+            return true;
+        }
+
         public List<string> GetTagNameByArtworkID(List<int> artworkIDs)
         {
             List<string> tagNames = new List<string>();

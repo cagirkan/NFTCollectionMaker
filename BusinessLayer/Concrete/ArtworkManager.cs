@@ -13,7 +13,7 @@ namespace BusinessLayer.Concrete
         readonly CollectionManager cm = new CollectionManager(new EfCollectionRepository());
         readonly CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
         readonly CollectionLayerManager clm = new CollectionLayerManager(new EfCollectionLayerRepository());
-        readonly LayerTagManager ltm = new LayerTagManager(new EfLayerTagRepository());
+        readonly ArtworkLayerManager alm = new ArtworkLayerManager(new EfArtworkLayerRepository());
 
         public ArtworkManager(IArtworkDal artworkDal)
         {
@@ -37,10 +37,10 @@ namespace BusinessLayer.Concrete
 
         public void Delete(Artwork t)
         {
-            var collectionLayers = clm.GetLayersOfCollection(t.CollectionID);
-            List<string> tagsOfArtwork = ltm.getTagsOfArtwork(collectionLayers);
+            List<int> collectionLayers = alm.GetLayersOfArtwork(t.ArtworkID);
+            List<string> typesOfArtwork = clm.getTypesOfArtwork(collectionLayers);
             cam.UpdateAnalytic(t.CollectionID, Constants.Constants.Analytics.Artworks, -1);
-            foreach (var item in tagsOfArtwork)
+            foreach (var item in typesOfArtwork)
             {
                 cam.UpdateAnalytic(t.CollectionID, Constants.Constants.Analytics.ArtworksWith + char.ToUpper(item[0]) + item.Substring(1), -1);
             }

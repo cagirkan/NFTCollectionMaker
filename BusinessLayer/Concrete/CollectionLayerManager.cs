@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete
 {
@@ -15,13 +16,14 @@ namespace BusinessLayer.Concrete
         readonly CollectionManager cm = new CollectionManager(new EfCollectionRepository());
         readonly CollectionAnalyticManager cam = new CollectionAnalyticManager(new EfCollectionAnalyticRepository());
         readonly ArtworkLayerManager alm = new ArtworkLayerManager(new EfArtworkLayerRepository());
+        readonly LayerTypeManager ltm = new LayerTypeManager(new EfLayerTypeRepository());
 
         public CollectionLayerManager(ICollectionLayerDal collectionLayer)
         {
             _collectionLayer = collectionLayer;
         }
 
-        public int AddWithReturn(CollectionLayer t)
+        public async Task<int> AddWithReturn(CollectionLayer t)
         {
             cam.UpdateAnalytic(t.CollectionID, Constants.Constants.Analytics.LayerItems, 1);
             _collectionLayer.Insert(t);
@@ -158,6 +160,18 @@ namespace BusinessLayer.Concrete
                 }
             }
             return collectionIDList;
+        }
+
+        public List<string> getTypesOfArtwork(List<int> collectionLayers)
+        {
+            List<string> typesOfArtwork = new List<string>();
+            foreach (int layerID in collectionLayers)
+            {
+                var collectionLayer = _collectionLayer.GetByID(layerID);
+                var type = ltm.GetByID(collectionLayer.LayerTypeID).LayerTypeName;
+                typesOfArtwork.Add(type);
+            }
+            return typesOfArtwork;
         }
     }
 }

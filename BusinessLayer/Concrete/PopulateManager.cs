@@ -89,7 +89,8 @@ namespace BusinessLayer.Concrete
                         al.ArtworkID = artworkID;
                         al.CollectionLayerID = item.CollectionLayerID;
                         al.CreatedAt = DateTime.Now;
-                        alm.Add(al);
+                        var layertypeID = clm.GetByID(al.CollectionLayerID).LayerTypeID;
+                        alm.AddAnalytic(al,collection.CollectionID, layertypeID);
                     }
                     foreach (var item in artworkTags)
                     {

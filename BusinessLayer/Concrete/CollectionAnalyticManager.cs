@@ -82,6 +82,8 @@ namespace BusinessLayer.Concrete
                 if(item.Key == key)
                 {
                     item.Value += value;
+                    if (item.Value < 0)
+                        item.Value = 0;
                     item.UpdatedAt = DateTime.Now;
                     _collectionAnalytic.Update(item);
                 }

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using NFTCollectionMakerAPI.Models;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
@@ -68,6 +69,8 @@ namespace NFTCollectionMakerAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCollectionLayer(CollectionLayer collectionLayer)
         {
+            Tag dbTag;
+            LayerTag layerTag;
             collectionLayer.CreatedAt = DateTime.Now;
             collectionLayer.UpdatedAt = DateTime.Now;
             collectionLayer.Popularity = 0;
@@ -87,24 +90,34 @@ namespace NFTCollectionMakerAPI.Controllers
                                        filename);
             collectionLayer.ImagePath = path;
             collectionLayer.CollectionLayerName = filename.Substring(0, filename.Length - 4);
-            int collectionLayerID = clm.AddWithReturn(collectionLayer);
+            //clm.Add(collectionLayer);
             //Increase Analytic
             //Create Tag
             string tag = await _populateManager.GetTag(collectionLayer.ImageURL);
-            Tag dbTag = new Tag();
-            dbTag.TagName = tag;
-            dbTag.CreatedAt = DateTime.Now;
-            dbTag.UpdatedAt = DateTime.Now;
-            int tagID = tm.AddWithReturn(dbTag, collection.CollectionID);
+            
+            if (tm.isTagNameUnique(tag))
+            {
+                dbTag = new Tag();
+                dbTag.TagName = tag;
+                dbTag.CreatedAt = DateTime.Now;
+                dbTag.UpdatedAt = DateTime.Now;
+                layerTag = new LayerTag { CollectionLayer = collectionLayer, Tag = dbTag};
+            }
+            else
+            {
+                dbTag = tm.GetByName(tag);
+                layerTag = new LayerTag { CollectionLayer = collectionLayer};
+                layerTag.TagID = dbTag.TagID;
+            }
+            
+            
+            //int tagID = tm.AddWithReturn(dbTag, collection.CollectionID);
             //Create LayerTag
-            LayerTag layerTag = new LayerTag();
-            layerTag.CreatedAt = DateTime.Now;
-            layerTag.UpdatedAt = DateTime.Now;
-            layerTag.CollectionLayerID = collectionLayerID;
-            layerTag.TagID = tagID;
+            
             ltm.Add(layerTag);
             CollectionLayerViewModel response = _mapper.Map<CollectionLayerViewModel>(collectionLayer);
             response.Tag = tag;
+            response.LayerTags = new List<LayerTag>();
             return StatusCode(StatusCodes.Status201Created, response);
         }
 
